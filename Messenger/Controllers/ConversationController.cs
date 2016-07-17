@@ -8,10 +8,17 @@ namespace Messenger.Controllers
 {
     public class ConversationController : Controller
     {
+
         // GET: Conversation
         public ActionResult Index()
         {
             return View();
         }
+
+        public ActionResult Conversation()
+        {
+            return View();
+        }
+
     }
 }

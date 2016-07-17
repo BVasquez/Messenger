@@ -1,0 +1,12 @@
+﻿@model Messenger.Models.ConversationViewModels
+@{
+    ViewBag.Title = "Conversation";
+}
+<script src="~/signalr/hubs"></script>
+<div style="border: 1px solid black;width:100%;" id="ConversationStuck">
+
+</div>
+
+<hr />
+<input type="text" id="ConversationBar" style="width:100%" />
+<button type="submit" class="btn btn-primary">OK</button>
