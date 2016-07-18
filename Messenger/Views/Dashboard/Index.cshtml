@@ -1,0 +1,12 @@
+﻿@model IEnumerable<Messenger.Models.UserViewModels>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Friends</h2>
+
+@foreach(var friend in Model)
+{
+    <h1>@Html.ActionLink(string.Format("{0} {1}", friend.FirstName, friend.LastName), "Conversation", "Conversation", new { id= friend.UserId }, null)</h1>
+}
+

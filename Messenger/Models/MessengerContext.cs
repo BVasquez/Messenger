@@ -16,6 +16,7 @@ namespace Messenger.Models
 
         public DbSet<UserViewModels> Users { get; set; }
         public DbSet<ConversationViewModels> Conversations { get; set; }
+        public DbSet<FriendViewModels> Friends { get; set; }
 
     }
 }

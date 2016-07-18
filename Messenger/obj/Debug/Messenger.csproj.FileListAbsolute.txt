@@ -73,3 +73,10 @@ c:\users\bryan\documents\visual studio 2015\Projects\Messenger\Messenger\bin\Mic
 c:\users\bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.csprojResolveAssemblyReference.cache
 c:\users\bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.dll
 c:\users\bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.pdb
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\bin\Microsoft.AspNet.SignalR.Core.dll
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\bin\Microsoft.AspNet.SignalR.SystemWeb.dll
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\bin\Microsoft.AspNet.SignalR.Core.xml
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\bin\Microsoft.AspNet.SignalR.SystemWeb.xml
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.InitialCreate.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.csproj.GenerateResource.Cache
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.InitMigration.resources

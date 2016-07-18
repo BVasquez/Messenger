@@ -9,13 +9,7 @@ namespace Messenger.Controllers
     public class ConversationController : Controller
     {
 
-        // GET: Conversation
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-        public ActionResult Conversation()
+        public ActionResult Conversation(int UserFrom, int UserTo)
         {
             return View();
         }

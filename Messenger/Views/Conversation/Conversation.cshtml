@@ -2,11 +2,32 @@
 @{
     ViewBag.Title = "Conversation";
 }
+
+<script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
 <script src="~/signalr/hubs"></script>
-<div style="border: 1px solid black;width:100%;" id="ConversationStuck">
+
+<div style="border: 1px solid black;width:100%;" id="ConversationBoard">
 
 </div>
 
 <hr />
 <input type="text" id="ConversationBar" style="width:100%" />
-<button type="submit" class="btn btn-primary">OK</button>
+<button type="submit" class="btn btn-primary" id="ButtonSender">OK</button>
+
+
+
+<script>
+    $(function () {
+        var chat = $.connection.chatHub;
+        chat.client.Hello = function (name, message) {
+            $("#ConversationBoard").append("<p>" + name + "--> " + message + "<p/><br/>");
+        };
+        var name = 'karl';
+        $.connection.hub.start().done(function () {
+            $("#ButtonSender").click(function () {
+                chat.server.hello(name, $("#ConversationBar").val());
+                $("#ConversationBar").val('');
+            });
+        });
+    });
+</script>
