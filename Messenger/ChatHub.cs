@@ -8,9 +8,9 @@ namespace Messenger
 {
     public class ChatHub : Hub
     {
-        public void Hello(string name, string message)
+        public void Hello(string name, string usermessage)
         {
-            Clients.All.hello(name, message);
+            Clients.All.hello(name, usermessage);
         }
     }
 }

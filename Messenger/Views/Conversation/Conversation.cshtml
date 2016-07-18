@@ -1,32 +1,54 @@
-﻿@model Messenger.Models.ConversationViewModels
+﻿@model IEnumerable<Messenger.Models.ConversationViewModels>
+
 @{
     ViewBag.Title = "Conversation";
+    int userfrom = Convert.ToInt32(Request.QueryString["UserFrom"]);
+    int userto = Convert.ToInt32(Request.QueryString["UserTo"]);
 }
 
 <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
 <script src="~/signalr/hubs"></script>
 
-<div style="border: 1px solid black;width:100%;" id="ConversationBoard">
 
+
+<div style="border: 1px solid black;width:100%;" id="ConversationBoard">
+    @foreach (var conversation in Model)
+    {
+        if (conversation.From == userfrom)
+        {
+            <p id="usrFrom" style="background-color:cornflowerblue">@string.Format("{0} ---> {1}", conversation.From, conversation.Message)</p>
+        }
+        else if (conversation.From != userfrom)
+        {
+            <p id="usrTo" style="background-color:burlywood">@string.Format("{0} ---> {1}", conversation.From, conversation.Message)</p>
+        }
+    }
 </div>
 
+
+
+@using (Html.BeginForm())
+{
+    @Html.Hidden("From", userfrom)
+    @Html.Hidden("To", userto)
+    @Html.Hidden("Time", DateTime.Now)
 <hr />
-<input type="text" id="ConversationBar" style="width:100%" />
+<input type="text" name="Message" id="Message" style="width:100%" />
 <button type="submit" class="btn btn-primary" id="ButtonSender">OK</button>
+}
 
 
 
 <script>
     $(function () {
         var chat = $.connection.chatHub;
-        chat.client.Hello = function (name, message) {
-            $("#ConversationBoard").append("<p>" + name + "--> " + message + "<p/><br/>");
+        chat.client.Hello = function (name, usermessage) {
+            $("#ConversationBoard").append("<p>" + name + "--> " + usermessage + "<p/><br/>");
         };
         var name = 'karl';
         $.connection.hub.start().done(function () {
             $("#ButtonSender").click(function () {
-                chat.server.hello(name, $("#ConversationBar").val());
-                $("#ConversationBar").val('');
+                chat.server.hello(name, $("#Message").val());
             });
         });
     });
