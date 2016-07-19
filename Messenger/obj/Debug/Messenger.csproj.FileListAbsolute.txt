@@ -80,3 +80,5 @@ C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\bin\Mic
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.InitialCreate.resources
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.csproj.GenerateResource.Cache
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.InitMigration.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.columnusertoConversationViewModelsadded.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.changeusertoConversation.resources

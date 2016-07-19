@@ -29,6 +29,7 @@
 
 @using (Html.BeginForm())
 {
+    @Html.Hidden("Conversation", userfrom.ToString() + userto.ToString())
     @Html.Hidden("From", userfrom)
     @Html.Hidden("To", userto)
     @Html.Hidden("Time", DateTime.Now)

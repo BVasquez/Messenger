@@ -11,11 +11,14 @@ namespace Messenger.Controllers
     {
         MessengerContext db = new MessengerContext();
 
-        public ActionResult Conversation()
+        public ActionResult Conversation(int userFrom, int userTo)
         {
-            List<ConversationViewModels> ConversationList = db.Conversations.ToList();
+            string ConversationConvinated1 = userFrom.ToString() + userTo.ToString();
+            string ConversationConvinated2 = userTo.ToString() + userFrom.ToString();
+            List<ConversationViewModels> ConversationList = db.Conversations.Where(x => x.Conversation == ConversationConvinated1 || x.Conversation == ConversationConvinated2).ToList();
             return View(ConversationList);
         }
+
 
         [HttpPost]
         public ActionResult Conversation(ConversationViewModels conversation)
@@ -25,9 +28,12 @@ namespace Messenger.Controllers
                 db.Conversations.Add(conversation);
                 db.SaveChanges();
             }
-            List<ConversationViewModels> ConversationList = db.Conversations.ToList();
+            string ConversationConvinated1 = Request.QueryString["userFrom"] + Request.QueryString["userTo"];
+            string ConversationConvinated2 = Request.QueryString["userTo"] + Request.QueryString["userFrom"];
+            List<ConversationViewModels> ConversationList = db.Conversations.Where(x => x.Conversation == ConversationConvinated1 || x.Conversation == ConversationConvinated2).ToList();
             return View(ConversationList);
         }
+
 
     }
 }

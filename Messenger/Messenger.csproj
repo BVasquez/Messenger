@@ -201,6 +201,14 @@
     <Compile Include="Migrations\201607181747003_Init-Migration.Designer.cs">
       <DependentUpon>201607181747003_Init-Migration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607182350386_column user to ConversationViewModels added.cs" />
+    <Compile Include="Migrations\201607182350386_column user to ConversationViewModels added.Designer.cs">
+      <DependentUpon>201607182350386_column user to ConversationViewModels added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607182358533_change user to Conversation.cs" />
+    <Compile Include="Migrations\201607182358533_change user to Conversation.Designer.cs">
+      <DependentUpon>201607182358533_change user to Conversation.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ConversationViewModels.cs" />
@@ -208,6 +216,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MessengerContext.cs" />
+    <Compile Include="Models\UserAccessViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
@@ -272,6 +281,7 @@
     <Content Include="Views\Registration\Create.cshtml" />
     <Content Include="Views\Conversation\Conversation.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
+    <Content Include="Views\Home\Login.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -290,6 +300,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607181747003_Init-Migration.resx">
       <DependentUpon>201607181747003_Init-Migration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607182350386_column user to ConversationViewModels added.resx">
+      <DependentUpon>201607182350386_column user to ConversationViewModels added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607182358533_change user to Conversation.resx">
+      <DependentUpon>201607182358533_change user to Conversation.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
