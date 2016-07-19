@@ -14,14 +14,7 @@
 <div style="border: 1px solid black;width:100%;" id="ConversationBoard">
     @foreach (var conversation in Model)
     {
-        if (conversation.From == userfrom)
-        {
-            <p id="usrFrom" style="background-color:cornflowerblue">@string.Format("{0} ---> {1}", conversation.From, conversation.Message)</p>
-        }
-        else if (conversation.From != userfrom)
-        {
-            <p id="usrTo" style="background-color:burlywood">@string.Format("{0} ---> {1}", conversation.From, conversation.Message)</p>
-        }
+        <p class="userSays" data-userSaysId="@conversation.From">@string.Format("{0} ---> {1}", conversation.From, conversation.Message)</p>
     }
 </div>
 
@@ -44,7 +37,7 @@
     $(function () {
         var chat = $.connection.chatHub;
         chat.client.Hello = function (name, usermessage) {
-            $("#ConversationBoard").append("<p>" + name + "--> " + usermessage + "<p/><br/>");
+            $("#ConversationBoard").append("<p class='userSays' data-userSaysId='@userfrom'> @userfrom "+ " ---> "+ usermessage +"</p>");
         };
         var name = 'karl';
         $.connection.hub.start().done(function () {
@@ -52,5 +45,9 @@
                 chat.server.hello(name, $("#Message").val());
             });
         });
+
+        $(".userSays").css('background-color', 'yellow');
+        $(".userSays[data-userSaysId='@userfrom']").css('background-color', 'gray');
+
     });
 </script>
