@@ -2,11 +2,13 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Friends</h2>
+<br/>
+<h1>Welcome @ViewBag.CurrentUserName</h1>
+<br/>
+<h3>Friends</h3>
 
 @foreach(var friend in Model)
 {
-    <h1>@Html.ActionLink(string.Format("{0} {1}", friend.FirstName, friend.LastName), "Conversation", "Conversation", new { userFrom=ViewBag.CurrentUser, userTo= friend.UserId }, null)</h1>
+    <h4>@Html.ActionLink(string.Format("{0} {1}", friend.FirstName, friend.LastName), "Friend", "Conversation", new { userFrom=ViewBag.CurrentUser, userTo= friend.UserId }, null)</h4>
 }
 

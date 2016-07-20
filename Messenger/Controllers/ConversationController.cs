@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Messenger;
 using Messenger.Models;
 
 namespace Messenger.Controllers
@@ -11,8 +12,11 @@ namespace Messenger.Controllers
     {
         MessengerContext db = new MessengerContext();
 
-        public ActionResult Conversation(int userFrom, int userTo)
+        public ActionResult Friend(int userFrom, int userTo)
         {
+
+            ViewBag.UserToChatName = Helper.getUser(userTo);
+
             string ConversationConvinated1 = userFrom.ToString() + userTo.ToString();
             string ConversationConvinated2 = userTo.ToString() + userFrom.ToString();
             List<ConversationViewModels> ConversationList = db.Conversations.Where(x => x.Conversation == ConversationConvinated1 || x.Conversation == ConversationConvinated2).ToList();
@@ -21,11 +25,14 @@ namespace Messenger.Controllers
 
 
         [HttpPost]
-        public ActionResult Conversation(ConversationViewModels conversation)
+        [ValidateAntiForgeryToken]
+        public ActionResult Friend(ConversationViewModels conver)
         {
-            if(ModelState.IsValid)
+            ViewBag.UserToChatName = Helper.getUser(Convert.ToInt32(Request.QueryString["userTo"]));
+
+            if (ModelState.IsValid)
             {
-                db.Conversations.Add(conversation);
+                db.Conversations.Add(conver);
                 db.SaveChanges();
             }
             string ConversationConvinated1 = Request.QueryString["userFrom"] + Request.QueryString["userTo"];
@@ -33,7 +40,6 @@ namespace Messenger.Controllers
             List<ConversationViewModels> ConversationList = db.Conversations.Where(x => x.Conversation == ConversationConvinated1 || x.Conversation == ConversationConvinated2).ToList();
             return View(ConversationList);
         }
-
 
     }
 }

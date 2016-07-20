@@ -1,0 +1,225 @@
+﻿
+@model IEnumerable<Messenger.Models.ConversationViewModels>
+@{
+    ViewBag.Title = "Conversation";
+    int userfrom = Convert.ToInt32(Request.QueryString["UserFrom"]);
+    int userto = Convert.ToInt32(Request.QueryString["UserTo"]);
+}
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+<script src="~/signalr/hubs"></script>
+
+
+<br />
+<br />
+<div class="row">
+    <div class="col-md-12" id="board">
+        <div id="ImagesArea">
+            <div id="UserToImg"></div>
+            <div id="UserFromImg"></div>
+        </div>
+        <div id="ConversationArea">
+            <div id="UserInfo">
+                <h3>@ViewBag.UserToChatName</h3>
+            </div>
+            <div id="ConversationBoard">
+                @foreach (var conversation in Model)
+                {
+                    <p class="userSaysName" data-userSaysId="@conversation.From">@Helper.getUser(conversation.From)</p>
+                    <p class="userSaysMessage">@conversation.Message</p>
+                }
+            </div>
+            <div id="UserConversationArea">
+                @using (Html.BeginForm("Friend","Conversation", new { userFrom = userfrom, userTo = userto }, FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken();
+                    @Html.Hidden("Conversation", userfrom.ToString() + userto.ToString())
+                    @Html.Hidden("From", userfrom)
+                    @Html.Hidden("To", userto)
+                    @Html.Hidden("Time", DateTime.Now)
+                        <textarea name="Message" id="Message" class="form-control"></textarea>
+                    <input type="submit" class="btn btn-primary" id="ButtonSender" value="OK" />
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<style>
+    #UserInfo{
+        border: 1px solid black;
+        width:100%;
+        height: 100px;
+        padding-left: 20px;
+        padding-top: 10px;
+    }
+
+
+    #ConversationBoard {
+        border: 1px solid black;
+        width: 100%;
+        height: 400px;
+        overflow-x: scroll;
+    }
+
+
+    #UserFromImg, #UserToImg {
+        border: 3px solid green;
+        width: 150px;
+        height: 150px;
+        margin-left: 20px;
+        border-radius: 5%;
+    }
+
+
+    #UserToImg {
+        margin-top: 20px;
+    }
+
+
+    #UserFromImg {
+        margin-top: 250px;
+    }
+
+
+    #ImagesArea {
+        border: 1px solid black;
+        border-width: 2px 1px 2px 2px; 
+        width: 200px;
+        height: 600px;
+        float: left;
+    }
+
+    #ConversationArea {
+        border: 1px solid black;
+        width: 600px;
+        float: left;
+    }
+
+    #UserConversationArea{
+        border: 1px solid black;
+        width: 100%;
+        height: 100px;
+        padding: 0;
+    }
+
+    #Message
+    {
+        margin: 0;
+        width: 100%;
+        max-width: 900px;
+    }
+
+
+   .userSaysName{
+       font-weight: bold;
+       font-size: 13px;
+       margin-bottom: 0px;
+       margin-left: 5px;
+   }
+
+   .userSaysMessage{
+       color:black;
+       font-size: 15px;
+       margin-top: 0px;
+       margin-left: 15px;
+       margin-bottom: 15px;
+   }
+
+
+</style>
+
+
+
+
+
+
+
+
+
+
+
+@*<div style="border: 1px solid black;width:100%;" id="ConversationBoard">
+        @foreach (var conversation in Model)
+        {
+            <p class="userSays" data-userSaysId="@conversation.From">@string.Format("{0} ---> {1}", conversation.From, conversation.Message)</p>
+        }
+        
+    </div>*@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*<div style="border: 1px solid black;width:100%;" id="ConversationBoard">
+    @foreach (var conversation in Model)
+    {
+        <p class="userSays" data-userSaysId="@conversation.From">@string.Format("{0} ---> {1}", conversation.From, conversation.Message)</p>
+    }
+</div>*@
+
+
+
+
+
+
+@*@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken();
+    @Html.Hidden("Conversation", userfrom.ToString() + userto.ToString())
+    @Html.Hidden("From", userfrom)
+    @Html.Hidden("To", userto)
+    @Html.Hidden("Time", DateTime.Now)
+    <hr />
+    <input type="text" name="Message" id="Message" style="width:100%" />
+    <input type="submit" class="btn btn-primary" id="ButtonSender" value="OK" />
+}*@
+
+
+
+
+
+<script>
+    $(function () {
+
+        var chat = $.connection.chatHub;
+        chat.client.Hello = function (name, usermessage) {
+            $("#ConversationBoard").append("<p class='userSaysName' data-userSaysId='@userto'>@Helper.getUser(userfrom)</p><p class='userSaysMessage'>"+ message +"</p>");
+        };
+        $.connection.hub.start().done(function () {
+            $("#ButtonSender").click(function () {
+                chat.server.hello(name, $("#Message").val());
+            });
+        });
+
+        $(".userSaysName").css('color', 'red');
+        $(".userSaysName[data-userSaysId='@userfrom']").css('color', 'blue');
+
+    });
+</script>
