@@ -49,7 +49,11 @@
 
 
 <style>
-    #UserInfo{
+    #board {
+        min-width: 1000px;
+    }
+
+    #UserInfo {
         border: 1px solid black;
         width:100%;
         height: 100px;
@@ -207,19 +211,17 @@
 
 <script>
     $(function () {
-
         var chat = $.connection.chatHub;
-        chat.client.Hello = function (name, usermessage) {
-            $("#ConversationBoard").append("<p class='userSaysName' data-userSaysId='@userto'>@Helper.getUser(userfrom)</p><p class='userSaysMessage'>"+ message +"</p>");
+        chat.client.Hello = function (usermessage) {
+            $("#ConversationBoard").append("<p class='userSaysName' data-userSaysId='@userto'>@Helper.getUser(userfrom)</p><p class='userSaysMessage'>" + usermessage + "</p>");
         };
         $.connection.hub.start().done(function () {
             $("#ButtonSender").click(function () {
-                chat.server.hello(name, $("#Message").val());
+                chat.server.hello($("#Message").val());
             });
         });
 
         $(".userSaysName").css('color', 'red');
         $(".userSaysName[data-userSaysId='@userfrom']").css('color', 'blue');
-
     });
 </script>
