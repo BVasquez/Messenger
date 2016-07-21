@@ -229,6 +229,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Resources\cardAction_addMessenger.png" />
     <Content Include="Images\Resources\Complete_default_bg.png" />
     <Content Include="Images\Resources\Comple_default_footer.png" />
     <Content Include="Images\Resources\Comple_default_header.png" />
