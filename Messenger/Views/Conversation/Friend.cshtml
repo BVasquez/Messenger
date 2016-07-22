@@ -10,19 +10,29 @@
 <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
 <script src="~/signalr/hubs"></script>
 
-
-<br />
-<br />
 <div class="row">
     <div class="col-md-12" id="board">
-        <div id="ImagesArea">
-            <div id="UserToImg"></div>
-            <div id="UserFromImg"></div>
+        <div id="MenuArea">
+            <ul class="nav nav-pills">
+                <li><a href="#">Photos</a></li>
+                <li><a href="#">Files</a></li>
+                <li class="disabled"><a href="#">Videos</a></li>
+                <li class="disabled"><a href="#">Calls</a></li>
+                <li class="disabled"><a href="#">Games</a></li>
+                <li class="disabled"><a href="#">Activities</a></li>
+            </ul>
         </div>
+        
+            @*<div id="UserToImg"></div>
+            <div id="UserFromImg"></div>*@
+
         <div id="ConversationArea">
             <div id="UserInfo">
-                <h3>@ViewBag.UserToChatName</h3>
+                <h3>@ViewBag.UserToChatName <small>(Available)</small></h3>
+                <p>Any Status is put here...</p>
             </div>
+            <img id="userImgTo" src="~/Images/Resources/signin_avatar_default.png" />
+            <img id="userImgFrom" src="~/Images/Resources/signin_avatar_default.png" />
             <div id="ConversationBoard">
                 @foreach (var conversation in Model)
                 {
@@ -38,7 +48,7 @@
                     @Html.Hidden("From", userfrom)
                     @Html.Hidden("To", userto)
                     @Html.Hidden("Time", DateTime.Now)
-                        <textarea name="Message" id="Message" class="form-control"></textarea>
+                    <textarea name="Message" id="Message" class="form-control"></textarea>
                     <input type="submit" class="btn btn-primary" id="ButtonSender" value="OK" />
                 }
             </div>
@@ -49,24 +59,56 @@
 
 
 <style>
+    body {
+        padding: 10px;
+        background-image: url('../../Images/Resources/windowlive_header_bkg.png');
+        background-position: left top;
+        background-size: cover;
+        background-repeat: no-repeat;
+    }
+
+    #userImgTo{
+        position:absolute;
+        top: 100px;
+        left: 50px;
+        width: 125px;
+    }
+
+    #userImgFrom{
+        position:absolute;
+        top: 500px;
+        left: 50px;
+        width: 125px;
+    }
+
     #board {
         min-width: 1000px;
     }
 
     #UserInfo {
-        border: 1px solid black;
-        width:100%;
-        height: 100px;
-        padding-left: 20px;
-        padding-top: 10px;
+        padding-left: 17%;
+        border-style: solid;
+        border-color: gray;
+        border-top-width: 0;
+        border-left-width: 0;
+        border-right-width: 0;
+        border-bottom-width: 1px;
+        width: 100%;
+        height: 110px;
+        padding-top: 5px;
+        background-image: url('../../Images/Resources/banner-wallpaper.jpg');
+        background-repeat: no-repeat;
+        background-position-x: left top;
+        background-size: cover;
     }
 
 
     #ConversationBoard {
-        border: 1px solid black;
+        padding-left: 17%;
         width: 100%;
         height: 400px;
-        overflow-x: scroll;
+        overflow-y: scroll;
+        background-color: white;
     }
 
 
@@ -88,35 +130,31 @@
         margin-top: 250px;
     }
 
-
-    #ImagesArea {
-        border: 1px solid black;
-        border-width: 2px 1px 2px 2px; 
-        width: 200px;
-        height: 600px;
-        float: left;
-    }
-
     #ConversationArea {
         border: 1px solid black;
-        width: 600px;
+        width: 100%;
         float: left;
     }
 
     #UserConversationArea{
-        border: 1px solid black;
         width: 100%;
         height: 100px;
         padding: 0;
+        margin-bottom: 25px;
     }
 
     #Message
     {
-        margin: 0;
+        margin-left: 17%;
+        margin-bottom: 3px;
         width: 100%;
-        max-width: 900px;
+        max-width: 940px;
     }
 
+    #ButtonSender{
+        display: block;
+        margin-left: 17%;
+    }
 
    .userSaysName{
        font-weight: bold;
@@ -133,6 +171,17 @@
        margin-bottom: 15px;
    }
 
+    #MenuArea {
+        border: 1px solid black;
+        border-top-right-radius: 5px;
+        border-top-left-radius: 5px;
+        background-color: #02114b;
+    }
+
+    #MenuArea ul li a{
+         color: white;
+         margin-left: 20px;
+    }
 
 </style>
 
