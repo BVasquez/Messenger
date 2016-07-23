@@ -1,0 +1,46 @@
+﻿@model Messenger.Models.UserViewModels
+
+@{
+    ViewBag.Title = "Crea una cuenta Messenger!";
+}
+
+<h2>Crea una cuenta Messenger!</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="form-group">
+        @Html.LabelFor(x => x.FirstName, new {@class="control-label" })
+        @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.LastName, new { @class = "control-label" })
+        @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.NickName, new { @class = "control-label" })
+        @Html.TextBoxFor(x => x.NickName, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Gender, new { @class = "control-label" })
+        @Html.DropDownList( "Gender", ViewBag.GenderValues as SelectList, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.DateOfBirth, new { @class = "control-label" })
+        <input type="date" name="DateOfBirth" id="DateOfBirth" class="form-control" />
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Country, new { @class = "control-label" })
+        @Html.TextBoxFor(x => x.Country, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Email, new { @class = "control-label" })
+        @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(x => x.Password, new { @class = "control-label" })
+        @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+    </div>
+    <br />
+    <input type="submit" class="btn btn-primary" value="Aceptar"/>
+}
+

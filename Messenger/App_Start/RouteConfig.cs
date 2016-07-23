@@ -16,7 +16,7 @@ namespace Messenger
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Dashboard", action = "Index", id = 1 }
+                defaults: new { controller = "Home", action = "Login", id = 1 }
             );
         }
     }
