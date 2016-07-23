@@ -14,7 +14,6 @@ namespace Messenger.Controllers
 
         public ActionResult Friend(int userFrom, int userTo)
         {
-
             ViewBag.UserToChatName = Helper.getUser(userTo);
 
             string ConversationConvinated1 = userFrom.ToString() + userTo.ToString();

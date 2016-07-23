@@ -13,10 +13,10 @@ namespace UnitTestMessenger
             //Array
 
             //Act
-            string val1 = "Hola";
+            string val1 = ":-) :-x ";
 
             //Assert
-            Assert.AreEqual("Hola ", Helper.SetEmotionIcon(val1));
+            Assert.AreEqual("FelizMal", Helper.SetEmotionIcon(val1));
         }
     }
 }

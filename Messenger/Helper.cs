@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using Messenger.Models;
 using System.Text.RegularExpressions;
+using System.Net;
 
 namespace Messenger
 {
@@ -17,6 +18,7 @@ namespace Messenger
             return string.Format("{0} {1}", user.FirstName, user.LastName);
         }
 
+
         public static string SetEmotionIcon(string messageLine)
         {
             string result = "";
@@ -24,13 +26,13 @@ namespace Messenger
             
             foreach (var emogiText in inmemo)
             {
-                if (emogiText.ToString() == ":-)")
+                if (emogiText.ToString() == ":-x")
                 {
-                    result += Regex.Replace(emogiText.ToString(), @"^:-.$", "Feliz");
+                    result += Regex.Replace(emogiText.ToString(), @"^:-.$", "<img src='/Images/Emotions/47_47.gif' />");
                 }
-                else if (emogiText.ToString() == ":-x")
+                else if (emogiText.ToString() == ":-)")
                 {
-                    result += Regex.Replace(emogiText.ToString(), @"...", "mal");
+                    result += Regex.Replace(emogiText.ToString(), @"...", "Mal");
                 }
                 else
                 {
@@ -38,23 +40,6 @@ namespace Messenger
                 } 
             };
             return result;
-
-
-
-
-
-
-
-            //string result = "";
-            //MatchCollection matches = Regex.Matches(messageLine, @"^:-.$");
-            //foreach (var emogiText in matches)
-            //{
-            //    if (emogiText.ToString() == ":-)")
-            //    {
-            //        result = Regex.Replace(messageLine, @"^:-.$", "Feliz");
-            //    }
-            //};
-            //return result;
 
         }
 

@@ -37,7 +37,7 @@
                 @foreach (var conversation in Model)
                 {
                     <p class="userSaysName" data-userSaysId="@conversation.From">@Helper.getUser(conversation.From)</p>
-                    <p class="userSaysMessage">@conversation.Message</p>
+                    <p class="userSaysMessage">@Helper.SetEmotionIcon(conversation.Message)</p>
                 }
             </div>
             <div id="UserConversationArea">
@@ -323,14 +323,6 @@
 
 
 
-
-
-
-
-
-
-
-
 @*<div style="border: 1px solid black;width:100%;" id="ConversationBoard">
         @foreach (var conversation in Model)
         {
@@ -342,38 +334,12 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 @*<div style="border: 1px solid black;width:100%;" id="ConversationBoard">
     @foreach (var conversation in Model)
     {
         <p class="userSays" data-userSaysId="@conversation.From">@string.Format("{0} ---> {1}", conversation.From, conversation.Message)</p>
     }
 </div>*@
-
-
 
 
 
@@ -409,8 +375,6 @@
         $(".userSaysName").css('color', 'red');
         $(".userSaysName[data-userSaysId='@userfrom']").css('color', 'blue');
 
-
-
         $("#Emotions").click(function () {
             $("#EmotionList").fadeToggle();
         });
@@ -424,6 +388,11 @@
             $("#Message").val($("#Message").val() + " " + emotiontext + " ");
         });
 
+        $(".userSaysMessage").each(function () {
+            var tar = $(this).text();
+            var html = $.parseHTML(tar);
+            $(this).html(html);
+        });
 
 
     });
