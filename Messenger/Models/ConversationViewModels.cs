@@ -16,5 +16,10 @@ namespace Messenger.Models
         public int To { get; set; }
         public string Message { get; set; }
         public DateTime Time {get; set;}
+        public string DataType { get; set; }
+        public string FormatWeight { get; set; }
+        public string FormatCursive { get; set; }
+        public string FormatColor { get; set; }
+        public string FormatSize { get; set; }
     }
 }

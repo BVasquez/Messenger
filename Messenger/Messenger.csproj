@@ -210,6 +210,10 @@
     <Compile Include="Migrations\201607182358533_change user to Conversation.Designer.cs">
       <DependentUpon>201607182358533_change user to Conversation.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607231549247_Column type and Formatting Columns added.cs" />
+    <Compile Include="Migrations\201607231549247_Column type and Formatting Columns added.Designer.cs">
+      <DependentUpon>201607231549247_Column type and Formatting Columns added.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ConversationViewModels.cs" />
@@ -270,6 +274,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Resources\BT_underline-48.png" />
     <Content Include="Images\Emotions\47_47.gif" />
     <Content Include="Images\Emotions\48_48.gif" />
     <Content Include="Images\Emotions\49_49.gif" />
@@ -429,6 +434,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Images\Posted\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -449,6 +455,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607182358533_change user to Conversation.resx">
       <DependentUpon>201607182358533_change user to Conversation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607231549247_Column type and Formatting Columns added.resx">
+      <DependentUpon>201607231549247_Column type and Formatting Columns added.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
