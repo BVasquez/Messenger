@@ -11,10 +11,15 @@ namespace Messenger.Models
     {
         [Key]
         public int ConversationId { get; set; }
+        [Required]
         public string Conversation { get; set; }
+        [Required]
         public int From { get; set; }
+        [Required]
         public int To { get; set; }
+        [Required]
         public string Message { get; set; }
+        [Required]
         public DateTime Time {get; set;}
         public string DataType { get; set; }
         public string FormatWeight { get; set; }

@@ -1,0 +1,171 @@
+﻿@model Messenger.Models.UserViewModels
+
+@{
+    ViewBag.Title = "Crea una cuenta Messenger!";
+}
+<link href="~/Content/testing.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+
+<div id="header">
+</div>
+
+<h3>Create a TBT Live Messenger account!</h3>
+<p>Joining to TBT Live Messenger is very funny. You will enjoy a lot of features we have for you.</p>
+<hr />
+
+@using (Html.BeginForm("SignUp", "Account", FormMethod.Post, new { @class = "form-horizontal" }))
+{
+
+    <div id="firstname-group" class="form-group">
+        @Html.LabelFor(x => x.FirstName, new { @class = "control-label col-md-2" })
+        <div class="col-md-4">
+            @Html.TextBoxFor(x => x.FirstName, new { @class = "form-control" })
+        </div>
+        @Html.ValidationMessageFor(x => x.FirstName, "", new { @class = "col-md-5" })
+    </div>
+
+
+    <div id="lastname-group" class="form-group">
+        @Html.LabelFor(x => x.LastName, new { @class = "control-label col-md-2" })
+        <div class="col-md-4">
+            @Html.TextBoxFor(x => x.LastName, new { @class = "form-control" })
+        </div>
+        @Html.ValidationMessageFor(x => x.LastName, "", new { @class = "col-md-5" })
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(x => x.NickName, new { @class = "control-label col-md-2" })
+        <div class="col-md-5">
+            @Html.TextBoxFor(x => x.NickName, new { @class = "form-control" })
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        @Html.LabelFor(x => x.Gender, new { @class = "control-label col-md-2" })
+        <div class="col-md-5">
+            @Html.DropDownList("Gender", ViewBag.GenderValues as SelectList, new { @class = "form-control" })
+        </div>
+    </div>
+
+
+    <div id="dob-group" class="form-group">
+        @Html.LabelFor(x => x.DateOfBirth, new { @class = "control-label col-md-2" })
+        <div class="col-md-4">
+            <input type="date" name="DateOfBirth" id="DateOfBirth" class="form-control" />
+        </div>
+        @Html.ValidationMessageFor(x => x.DateOfBirth, "", new { @class = "col-md-5" })
+    </div>
+
+
+    <div id="country-group" class="form-group">
+        @Html.LabelFor(x => x.Country, new { @class = "control-label col-md-2" })
+        <div class="col-md-4">
+            @Html.TextBoxFor(x => x.Country, new { @class = "form-control" })
+        </div>
+        @Html.ValidationMessageFor(x => x.Country, "", new { @class = "col-md-5" })
+    </div>
+
+
+    <div id="email-group" class="form-group">
+        @Html.LabelFor(x => x.Email, new { @class = "control-label col-md-2" })
+        <div class="col-md-4">
+            @Html.TextBoxFor(x => x.Email, new { @class = "form-control" })
+        </div>
+        @Html.ValidationMessageFor(x => x.Email, "", new { @class = "col-md-5" })
+    </div>
+
+
+    <div id="password-group" class="form-group">
+        @Html.LabelFor(x => x.Password, new { @class = "control-label col-md-2" })
+        <div class="col-md-4">
+            @Html.PasswordFor(x => x.Password, new { @class = "form-control" })
+        </div>
+        @Html.ValidationMessageFor(x => x.Password, "", new { @class = "col-md-5" })
+    </div>
+    <br />
+    <input type="submit" class="btn btn-primary" value="Create"/>
+}
+
+<style>
+   .form-group {
+    margin-bottom: 15px;
+}
+
+.field-validation-error{
+    color: red;
+}
+
+ #header{
+    background-image: url('../../Images/Resources/Comple_default_header.png');
+    background-size: cover;
+    background-position: left top;
+    background-repeat: no-repeat;
+    display: block;
+    position: absolute;
+    top:0;
+    left:0;
+    height: 100px;
+    width: 100%;
+}
+
+ h3{
+     margin-top:75px;
+ }
+
+ .btn{
+     margin-left: 200px;
+ }
+    
+</style>
+
+
+
+
+<script>
+    $(function () {
+        $("span[class='field-validation-error col-md-5']").each(function (i, o) {
+            if ($(this).data('valmsg-for') == "FirstName") {
+                $("#firstname-group").addClass('has-error');
+            }
+
+            if ($(this).data('valmsg-for') == "LastName") {
+                $("#lastname-group").addClass('has-error');
+            }
+
+            if ($(this).data('valmsg-for') == "DateOfBirth") {
+                $("#dob-group").addClass('has-error');
+            }
+
+            if ($(this).data('valmsg-for') == "Country") {
+                $("#country-group").addClass('has-error');
+            }
+
+            if ($(this).data('valmsg-for') == "Email") {
+                $("#email-group").addClass('has-error');
+            }
+
+            if ($(this).data('valmsg-for') == "Password") {
+                $("#password-group").addClass('has-error');
+            }
+
+        });
+        
+
+
+
+
+
+
+
+
+
+
+       
+        
+    });
+</script>

@@ -13,19 +13,70 @@ namespace Messenger.Controllers
         MessengerContext db = new MessengerContext();
 
         //Show Contact User
-        public ActionResult Index(int id)
+        public ActionResult Index(int User)
         {
-            UserViewModels currentUser = db.Users.Find(id);
+            UserViewModels currentUser = db.Users.Find(User);
+            PersonalizationViewModels personalizationCurrentUser = db.Personalizations.Find(User);
+
             ViewBag.CurrentUserName = string.Format("{0} {1}", currentUser.FirstName, currentUser.LastName);
 
             var UsersFriend = from user in db.Users
                               join friend in db.Friends on user.UserId equals friend.Friend
-                              where friend.UserId == id 
+                              where friend.UserId == User
                               select user;
-            ViewBag.CurrentUser = id;
+
+            ViewBag.CurrentUserPhoto = personalizationCurrentUser.PhotoProfile;
+            ViewBag.CurrentUserMessageStatus = personalizationCurrentUser.Status;
+            ViewBag.CurrentUserTextColor = personalizationCurrentUser.TextColor;
+            ViewBag.CurrentUserColor = personalizationCurrentUser.Color;
+            ViewBag.CurrentUserConnectionState = personalizationCurrentUser.ConnectionStatus;
+            switch(personalizationCurrentUser.ConnectionStatus)
+            {
+                case "Online":
+                    ViewBag.CurrentUserConnectionStateColor = "#20b010";
+                    break;
+                case "Offline":
+                    ViewBag.CurrentUserConnectionStateColor = "#aadff0";
+                    break;
+                case "Busy":
+                    ViewBag.CurrentUserConnectionStateColor = "#db3127";
+                    break;
+            }
+
+            ViewBag.CurrentUser = User;
             return View(UsersFriend);
         }
 
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddFriend(int currentUser, string email)
+        {
+            List<UserViewModels> usr = db.Users.Where(x => x.Email == email).ToList();
+            if (usr != null)
+            {
+                db.Friends.Add(new FriendViewModels { UserId = currentUser, Friend = usr[0].UserId });
+                db.SaveChanges();
+            }
+            return RedirectToAction("Index", new { user = currentUser});
+        }
+
+
+        [HttpPost]
+        public ActionResult SetConnectionStatus(int user, string status)
+        {
+            if (ModelState.IsValid)
+            {
+                PersonalizationViewModels personalization = db.Personalizations.Find(user);
+                personalization.ConnectionStatus = status;
+
+
+                db.Entry(personalization).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Dashboard", new { user = user });
+            }
+            return View();
+        }
 
 
 

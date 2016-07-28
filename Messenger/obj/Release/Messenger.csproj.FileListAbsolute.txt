@@ -83,3 +83,4 @@ C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Rel
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.dll
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.pdb
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.ColumntypeandFormattingColumnsadded.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.SettingRequiredfieldsatConversation.resources

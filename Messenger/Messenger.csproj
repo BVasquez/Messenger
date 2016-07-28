@@ -189,7 +189,7 @@
     <Compile Include="Controllers\ConversationController.cs" />
     <Compile Include="Controllers\DashboardController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\RegistrationController.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -214,6 +214,26 @@
     <Compile Include="Migrations\201607231549247_Column type and Formatting Columns added.Designer.cs">
       <DependentUpon>201607231549247_Column type and Formatting Columns added.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607250258519_Setting Required fields at Conversation.cs" />
+    <Compile Include="Migrations\201607250258519_Setting Required fields at Conversation.Designer.cs">
+      <DependentUpon>201607250258519_Setting Required fields at Conversation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607260451052_Setting required to User.cs" />
+    <Compile Include="Migrations\201607260451052_Setting required to User.Designer.cs">
+      <DependentUpon>201607260451052_Setting required to User.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607261610116_Status field is deleted.cs" />
+    <Compile Include="Migrations\201607261610116_Status field is deleted.Designer.cs">
+      <DependentUpon>201607261610116_Status field is deleted.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607270121503_Personalization Model added.cs" />
+    <Compile Include="Migrations\201607270121503_Personalization Model added.Designer.cs">
+      <DependentUpon>201607270121503_Personalization Model added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607272218194_TextColor and StatusConnection added to PersonalizationViewModels.cs" />
+    <Compile Include="Migrations\201607272218194_TextColor and StatusConnection added to PersonalizationViewModels.Designer.cs">
+      <DependentUpon>201607272218194_TextColor and StatusConnection added to PersonalizationViewModels.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ConversationViewModels.cs" />
@@ -221,6 +241,7 @@
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MessengerContext.cs" />
+    <Compile Include="Models\PersonalizationViewModels.cs" />
     <Compile Include="Models\UserAccessViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -229,6 +250,7 @@
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\testing.css" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
     <Content Include="Content\themes\base\autocomplete.css" />
@@ -274,6 +296,11 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Images\Background\back_1.jpg" />
+    <Content Include="Images\Background\back_2.jpg" />
+    <Content Include="Images\Resources\gear_64.png" />
+    <Content Include="Images\Profile\Per_1.jpg" />
+    <Content Include="Images\Profile\per_2.jpg" />
     <Content Include="Images\Resources\BT_underline-48.png" />
     <Content Include="Images\Emotions\47_47.gif" />
     <Content Include="Images\Emotions\48_48.gif" />
@@ -365,6 +392,8 @@
     <Content Include="Images\Resources\contactlist_avatar_small_offline.png" />
     <Content Include="Images\Resources\contactlist_avatar_small_orange.png" />
     <Content Include="Images\Resources\contactlist_avatar_small_red.png" />
+    <Content Include="Images\Resources\ic_arrow_drop_down_48px-32.png" />
+    <Content Include="Images\Resources\ic_keyboard_arrow_down_48px-32.png" />
     <Content Include="Images\Resources\interface-controls-sort-descending-48.png" />
     <Content Include="Images\Resources\signin_avatar_default.png" />
     <Content Include="Images\Resources\windowlive_header_bkg.png" />
@@ -407,18 +436,6 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\ConfirmEmail.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
-    <Content Include="Views\Account\ForgotPassword.cshtml" />
-    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\Login.cshtml" />
-    <Content Include="Views\Account\Register.cshtml" />
-    <Content Include="Views\Account\ResetPassword.cshtml" />
-    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
-    <Content Include="Views\Account\SendCode.cshtml" />
-    <Content Include="Views\Account\VerifyCode.cshtml" />
     <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
     <Content Include="Views\Manage\ChangePassword.cshtml" />
     <Content Include="Views\Manage\Index.cshtml" />
@@ -427,10 +444,11 @@
     <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
-    <Content Include="Views\Registration\Create.cshtml" />
+    <Content Include="Views\Account\SignUp.cshtml" />
     <Content Include="Views\Conversation\Friend.cshtml" />
     <Content Include="Views\Dashboard\Index.cshtml" />
-    <Content Include="Views\Home\Login.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Personalization.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -458,6 +476,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607231549247_Column type and Formatting Columns added.resx">
       <DependentUpon>201607231549247_Column type and Formatting Columns added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607250258519_Setting Required fields at Conversation.resx">
+      <DependentUpon>201607250258519_Setting Required fields at Conversation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607260451052_Setting required to User.resx">
+      <DependentUpon>201607260451052_Setting required to User.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607261610116_Status field is deleted.resx">
+      <DependentUpon>201607261610116_Status field is deleted.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607270121503_Personalization Model added.resx">
+      <DependentUpon>201607270121503_Personalization Model added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607272218194_TextColor and StatusConnection added to PersonalizationViewModels.resx">
+      <DependentUpon>201607272218194_TextColor and StatusConnection added to PersonalizationViewModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

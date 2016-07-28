@@ -14,6 +14,41 @@ namespace Messenger.Controllers
 
         public ActionResult Friend(int userFrom, int userTo)
         {
+            PersonalizationViewModels personalizationFrom = db.Personalizations.Find(userFrom);
+            PersonalizationViewModels personalizationTo = db.Personalizations.Find(userTo);
+
+            ViewBag.UserPhotoProfileFrom = "/Images/Profile/" + personalizationFrom.PhotoProfile;
+            ViewBag.UserPhotoProfileTo = "/Images/Profile/" + personalizationTo.PhotoProfile;
+            ViewBag.UserBackgroundTo = "/Images/Background/" + personalizationTo.PhotoBackground;
+            ViewBag.UserColorTo = personalizationTo.Color;
+            ViewBag.UserTextColor = personalizationTo.TextColor;
+            ViewBag.UserStatusMessage = personalizationTo.Status;
+            ViewBag.UserConnectionStatus = personalizationTo.ConnectionStatus;
+            switch (personalizationTo.ConnectionStatus)
+            {
+                case "Online":
+                    ViewBag.UserConnectionStateColorTo = "#20b010";
+                    break;
+                case "Offline":
+                    ViewBag.UserConnectionStateColorTo = "#aadff0";
+                    break;
+                case "Busy":
+                    ViewBag.UserConnectionStateColorTo = "#db3127";
+                    break;
+            }
+            switch (personalizationFrom.ConnectionStatus)
+            {
+                case "Online":
+                    ViewBag.UserConnectionStateColorFrom = "#20b010";
+                    break;
+                case "Offline":
+                    ViewBag.UserConnectionStateColorFrom = "#aadff0";
+                    break;
+                case "Busy":
+                    ViewBag.UserConnectionStateColorFrom = "#db3127";
+                    break;
+            }
+
             ViewBag.UserToChatName = Helper.getUser(userTo);
             ViewBag.FormatFontSizeOptions = new SelectList(new string[] { "15px", "20px", "25px" ,"30px" ,"35px"});
             ViewBag.FormatFontWeightOptions = new SelectList(new string[] { "normal", "bold" });
@@ -30,6 +65,15 @@ namespace Messenger.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Friend(ConversationViewModels conver)
         {
+            PersonalizationViewModels personalizationFrom = db.Personalizations.Find(int.Parse(Request.QueryString["userFrom"]));
+            PersonalizationViewModels personalizationTo = db.Personalizations.Find(int.Parse(Request.QueryString["userTo"]));
+
+            ViewBag.UserPhotoProfileFrom = "/Images/Profile/" + personalizationFrom.PhotoProfile;
+            ViewBag.UserPhotoProfileTo = "/Images/Profile/" + personalizationTo.PhotoProfile;
+            ViewBag.UserBackgroundTo = "/Images/Background/" + personalizationTo.PhotoBackground;
+            ViewBag.UserColorTo = personalizationTo.Color;
+            ViewBag.UserStatusMessage = personalizationTo.Status;
+
             ViewBag.UserToChatName = Helper.getUser(Convert.ToInt32(Request.QueryString["userTo"]));
             ViewBag.FormatFontSizeOptions = new SelectList(new string[] { "15px", "20px", "25px", "30px", "35px" });
             ViewBag.FormatFontWeightOptions = new SelectList(new string[] { "normal", "bold" });
@@ -68,7 +112,7 @@ namespace Messenger.Controllers
                 db.Conversations.Add(conv);
                 db.SaveChanges();
             }
-            return RedirectToAction("Friend", new { userfrom = userFrom, userto = userTo });
+            return RedirectToAction("Friend", new { userfrom = userFrom, userto = userTo, imagePosted="True" });
         }
 
 

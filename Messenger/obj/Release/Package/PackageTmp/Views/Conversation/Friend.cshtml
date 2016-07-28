@@ -4,6 +4,7 @@
     ViewBag.Title = "Conversation";
     int userfrom = Convert.ToInt32(Request.QueryString["UserFrom"]);
     int userto = Convert.ToInt32(Request.QueryString["UserTo"]);
+    string imageposted = Request.QueryString["imagePosted"];
 }
 
 <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
@@ -29,6 +30,7 @@
                 <h3>@ViewBag.UserToChatName <small>(Available)</small></h3>
                 <p>Any Status is put here...</p>
             </div>
+            <input type="hidden" value="@imageposted" id="LoadAfterPostImage" />
             <img id="userImgTo" src="~/Images/Resources/signin_avatar_default.png" />
             <img id="userImgFrom" src="~/Images/Resources/signin_avatar_default.png" />
             <div id="ConversationBoard">
@@ -37,7 +39,7 @@
                     <p class="userSaysName" data-userSaysId="@conv.From">@Helper.getUser(conv.From)</p>
                     if(conv.DataType == "image")
                     {
-                        <a href="~/Images/Posted/@conv.Message" target="_blank"><img id="showImage" src="~/Images/Posted/@conv.Message" /></a><br />
+                        <a href="~/Images/Posted/@conv.Message" target="_blank"><img class="showImage" src="~/Images/Posted/@conv.Message" /></a><br />
                     }
                     else
                     {
@@ -165,67 +167,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <div class="modal fade" id="dialogs">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -251,20 +192,8 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 <style>
-    #showImage{
+    .showImage{
         width: 300px;
         height: 300px;
         border-radius: 5px;
@@ -488,34 +417,52 @@
 <script>
     $(function () {
         var chat = $.connection.chatHub;
+
         chat.client.Hello = function (usermessage, fontweight, fontcursive, fontcolor, fontsize) {
-            $("#ConversationBoard").append("<p class='userSaysName' data-userSaysId='@userto'>@Helper.getUser(userto)</p><p id='TempMessage' class='userSaysMessage'>" + usermessage + "</p>");
+            $("#ConversationBoard").append("<p class='userSaysName' data-userSaysId='@userto'>@Helper.getUser(userto)</p><p id='TempMessage' class='userSaysMessage' style='font-size:"+fontsize+";font-style:"+fontcursive+";font-weight:"+fontweight+";color:"+fontcolor+";'>" + usermessage + "</p>");
             $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
-            $("#TempMessage").css('font-size', fontsize)
-                             .css('font-weight', fontweight)
-                             .css('font-style', fontcursive)
-                             .css('color', fontcolor);
         };
 
-        chat.client.Shake = function(act) {
+        chat.client.Shake = function (act) {
             if (act == true) {
                 $("#board").effect("shake", { times: 5 }, 800);
             };
+
         }
+
+        chat.client.ImageUploaded = function (relo) {
+            if (relo == true) {
+                window.location.reload();
+            };
+        }
+
+
 
         $.connection.hub.start().done(function () {
             $("#ButtonSender").click(function () {
-                var fontsize = $("#FormatSize").val();
-                var fontweight = $("#FormatWeight").val();
-                var fontcursive = $("#FormatCursive").val();
-                var fontcolor = $("#FormatColor").val();
-
+                var fontsize = $("#Message").css('font-size');
+                var fontweight = $("#Message").css('font-weight');
+                var fontcursive = $("#Message").css('font-style');
+                var fontcolor = $("#Message").css('color');
                 chat.server.hello($("#Message").val(), fontweight, fontcursive, fontcolor, fontsize);
             });
 
             $("#ShakeAnimation").click(function () {
                 chat.server.shake(true);
             });
+            
+
+            //$("body").ready(function () {
+            //    if ($("#LoadAfterPostImage").val() == "True")
+            //    {
+            //        chat.server.imageUploaded(true);
+            //        $("#LoadAfterPostImage").val("False")
+            //    }
+            //});
+
+            
+
+
         });
 
 
@@ -526,7 +473,17 @@
 
 
 
+        $("#Message").focus(function () {
+            var fontsize = $("#FormatSize").val();
+            var fontweight = $("#FormatWeight").val();
+            var fontcursive = $("#FormatCursive").val();
+            var fontcolor = $("#FormatColor").val();
 
+            $("#Message").css('font-size', fontsize)
+                         .css('font-weight', fontweight)
+                         .css('font-style', fontcursive)
+                         .css('color', fontcolor);
+        });
 
         $(".userSaysName").css('color', 'red');
         $(".userSaysName[data-userSaysId='@userfrom']").css('color', 'blue');
@@ -579,7 +536,7 @@
             $("#submitUploadImage").submit();
         });
 
-
+        
 
         $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
 

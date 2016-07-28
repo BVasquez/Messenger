@@ -6,7 +6,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>C:\Users\Bryan\Desktop\New folder (3)</_PublishTargetUrl>
+    <_PublishTargetUrl>C:\inetpub\wwwroot\New folder (3)</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="bin/Antlr3.Runtime.dll">
@@ -19,7 +19,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>03/02/2015 09:32:26</publishTime>
     </File>
     <File Include="bin/Messenger.dll">
-      <publishTime>07/23/2016 22:06:54</publishTime>
+      <publishTime>07/24/2016 23:20:26</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.Identity.Core.dll">
       <publishTime>04/03/2015 17:07:22</publishTime>
@@ -691,7 +691,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>07/16/2016 21:03:35</publishTime>
     </File>
     <File Include="Views/Conversation/Friend.cshtml">
-      <publishTime>07/23/2016 22:02:48</publishTime>
+      <publishTime>07/24/2016 20:10:15</publishTime>
     </File>
     <File Include="Views/Dashboard/Index.cshtml">
       <publishTime>07/22/2016 15:09:51</publishTime>

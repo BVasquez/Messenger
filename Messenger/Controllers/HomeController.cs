@@ -9,29 +9,7 @@ namespace Messenger.Controllers
 {
     public class HomeController : Controller
     {
-        MessengerContext db = new MessengerContext();
-
-
-        public ActionResult Login()
-        {
-            return View();
-        }
-
-
-        [HttpPost]
-        public ActionResult Login(UserAccessViewModels UserAccess)
-        {
-            if(ModelState.IsValid)
-            {
-                UserViewModels[] CheckUser = db.Users.Where<UserViewModels>(x => x.Email == UserAccess.User && x.Password == UserAccess.Password).ToArray();
-                if(CheckUser.Length == 1)
-                {
-                   return RedirectToAction("Index", "Dashboard", new { id = CheckUser[0].UserId });
-                }
-            }
-
-            return View();
-        }
+       
 
 
 
