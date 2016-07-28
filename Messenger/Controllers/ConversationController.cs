@@ -72,7 +72,33 @@ namespace Messenger.Controllers
             ViewBag.UserPhotoProfileTo = "/Images/Profile/" + personalizationTo.PhotoProfile;
             ViewBag.UserBackgroundTo = "/Images/Background/" + personalizationTo.PhotoBackground;
             ViewBag.UserColorTo = personalizationTo.Color;
+            ViewBag.UserTextColor = personalizationTo.TextColor;
             ViewBag.UserStatusMessage = personalizationTo.Status;
+            ViewBag.UserConnectionStatus = personalizationTo.ConnectionStatus;
+            switch (personalizationTo.ConnectionStatus)
+            {
+                case "Online":
+                    ViewBag.UserConnectionStateColorTo = "#20b010";
+                    break;
+                case "Offline":
+                    ViewBag.UserConnectionStateColorTo = "#aadff0";
+                    break;
+                case "Busy":
+                    ViewBag.UserConnectionStateColorTo = "#db3127";
+                    break;
+            }
+            switch (personalizationFrom.ConnectionStatus)
+            {
+                case "Online":
+                    ViewBag.UserConnectionStateColorFrom = "#20b010";
+                    break;
+                case "Offline":
+                    ViewBag.UserConnectionStateColorFrom = "#aadff0";
+                    break;
+                case "Busy":
+                    ViewBag.UserConnectionStateColorFrom = "#db3127";
+                    break;
+            }
 
             ViewBag.UserToChatName = Helper.getUser(Convert.ToInt32(Request.QueryString["userTo"]));
             ViewBag.FormatFontSizeOptions = new SelectList(new string[] { "15px", "20px", "25px", "30px", "35px" });
@@ -89,6 +115,8 @@ namespace Messenger.Controllers
             List<ConversationViewModels> ConversationList = db.Conversations.Where(x => x.Conversation == ConversationConvinated1 || x.Conversation == ConversationConvinated2).ToList();
             return View(ConversationList);
         }
+
+
 
 
         [HttpPost]
