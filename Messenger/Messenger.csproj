@@ -298,6 +298,37 @@
     <Content Include="Content\Site.css" />
     <Content Include="Images\Background\back_1.jpg" />
     <Content Include="Images\Background\back_2.jpg" />
+    <Content Include="Images\Background\Comple_default_header.png" />
+    <Content Include="Images\Developers\Bryan.jpg" />
+    <Content Include="Images\Developers\Carlos.jpeg" />
+    <Content Include="Images\Developers\Carmen.jpeg" />
+    <Content Include="Images\Developers\Jeison.jpeg" />
+    <Content Include="Images\Developers\Lisandro.jpg" />
+    <Content Include="Images\Developers\Massiel.jpeg" />
+    <Content Include="Images\Developers\Wilkander.jpeg" />
+    <Content Include="Images\Profile\default\def1.png" />
+    <Content Include="Images\Profile\default\def2.png" />
+    <Content Include="Images\Profile\default\def3.png" />
+    <Content Include="Images\Profile\default\def4.png" />
+    <Content Include="Images\Profile\default\def5.png" />
+    <Content Include="Images\Profile\default\def6.png" />
+    <Content Include="Images\Profile\default\def7.png" />
+    <Content Include="Images\Profile\default\def8.png" />
+    <Content Include="Images\Profile\default\def9.png" />
+    <Content Include="Images\Profile\default\def10.png" />
+    <Content Include="Images\Profile\default\def11.png" />
+    <Content Include="Images\Profile\default\def13.png" />
+    <Content Include="Images\Profile\default\def14.png" />
+    <Content Include="Images\Profile\default\def15.png" />
+    <Content Include="Images\Profile\default\def16.png" />
+    <Content Include="Images\Profile\default\def17.png" />
+    <Content Include="Images\Profile\default\def18.png" />
+    <Content Include="Images\Profile\default\def19.png" />
+    <Content Include="Images\Profile\default\def20.png" />
+    <Content Include="Images\Profile\default\def21.png" />
+    <Content Include="Images\Profile\default\def12.png" />
+    <Content Include="Images\Profile\default\def22.png" />
+    <Content Include="Images\Profile\defaultProfile.png" />
     <Content Include="Images\Resources\gear_64.png" />
     <Content Include="Images\Profile\Per_1.jpg" />
     <Content Include="Images\Profile\per_2.jpg" />
@@ -395,6 +426,7 @@
     <Content Include="Images\Resources\ic_arrow_drop_down_48px-32.png" />
     <Content Include="Images\Resources\ic_keyboard_arrow_down_48px-32.png" />
     <Content Include="Images\Resources\interface-controls-sort-descending-48.png" />
+    <Content Include="Images\Resources\logout-48.png" />
     <Content Include="Images\Resources\signin_avatar_default.png" />
     <Content Include="Images\Resources\windowlive_header_bkg.png" />
     <Content Include="Images\Resources\UI_Blue_2_of_3_1-48.png" />
@@ -449,6 +481,7 @@
     <Content Include="Views\Dashboard\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Personalization.cshtml" />
+    <Content Include="Views\Account\About.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

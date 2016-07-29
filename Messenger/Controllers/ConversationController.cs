@@ -145,6 +145,27 @@ namespace Messenger.Controllers
 
 
 
+        [HttpPost]
+        public ActionResult setPhotoProfile(int userFrom, int userTo, string picChosen, HttpPostedFileBase picUploaded)
+        {
+            if(ModelState.IsValid)
+            {
+                PersonalizationViewModels personalization = db.Personalizations.Find(userFrom);
+                personalization.PhotoProfile = string.Format("default/{0}.png", picChosen);
+                if(picUploaded != null)
+                {
+                    string ProfilePhotoFormat = picUploaded.FileName.Substring(picUploaded.FileName.Length - 4);
+                    picUploaded.SaveAs(Server.MapPath("~/Images/Profile/default/") + string.Format("per_{0}{1}", userFrom, ProfilePhotoFormat));
+                    personalization.PhotoProfile = string.Format("per_{0}{1}", userFrom, ProfilePhotoFormat);
+                }
+                db.Entry(personalization).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                return RedirectToAction("Friend", new { userfrom = userFrom, userto = userTo });
+            }
+
+            return View();
+        }
 
 
 

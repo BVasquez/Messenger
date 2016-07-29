@@ -17,7 +17,7 @@
         <div id="MenuArea" style="background-color: @ViewBag.UserColorTo;">
             <ul class="nav nav-pills">
                 <li id="imageOpt"><a href="#">Photos</a></li>
-                <li><a href="#">Files</a></li>
+                <li class="disabled"><a href="#">Files</a></liclass="disabled">
                 <li class="disabled"><a href="#">Videos</a></li>
                 <li class="disabled"><a href="#">Calls</a></li>
                 <li class="disabled"><a href="#">Games</a></li>
@@ -190,12 +190,62 @@
 
 
 
+<div class="modal fade" id="dialogsImg">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Choose Image</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("setPhotoProfile", "Conversation", new { userFrom = userfrom, userTo = userto }, FormMethod.Post, new { enctype = "multipart/form-data", @id="submitImagePicker" }))
+                {
+                    <label class="control-label">Choose an Image</label>
+                    <br />
+                    <img src="/Images/Profile/default/def1.png" data-value="def1" />
+                    <img src="/Images/Profile/default/def2.png" data-value="def2" />
+                    <img src="/Images/Profile/default/def4.png" data-value="def4" />
+                    <img src="/Images/Profile/default/def5.png" data-value="def5" />
+                    <img src="/Images/Profile/default/def6.png" data-value="def6" />
+                    <img src="/Images/Profile/default/def7.png" data-value="def7" />
+                    <img src="/Images/Profile/default/def8.png" data-value="def8" />
+                    <img src="/Images/Profile/default/def9.png" data-value="def9" />
+                    <img src="/Images/Profile/default/def10.png" data-value="def10" />
+                    <img src="/Images/Profile/default/def11.png" data-value="def11" />
+                    <img src="/Images/Profile/default/def12.png" data-value="def12" />
+                    <img src="/Images/Profile/default/def13.png" data-value="def13" />
+                    <img src="/Images/Profile/default/def14.png" data-value="def14" />
+                    <img src="/Images/Profile/default/def15.png" data-value="def15" />
+                    <img src="/Images/Profile/default/def16.png" data-value="def16" />
+                    <img src="/Images/Profile/default/def17.png" data-value="def17" />
+                    <img src="/Images/Profile/default/def18.png" data-value="def18" />
+                    <img src="/Images/Profile/default/def19.png" data-value="def19" />
+                    <img src="/Images/Profile/default/def20.png" data-value="def20" />
+                    <img src="/Images/Profile/default/def22.png" data-value="def22" />
+                    <br />
+                    <hr />
+                    <label class="control-label">Or upload an image</label>
+                    <input type="file" id="picUploaded" name="picUploaded" />
+                    <input type="hidden" id="picChosen" name="picChosen" />
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" class="btn btn-primary" id="ChangeImage">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
 
 <style>
     .showImage{
         width: 300px;
         height: 300px;
         border-radius: 5px;
+        margin-left: 10px; 15px;
     }
 
     body {
@@ -401,6 +451,10 @@
         margin-left: 25px;
     }
 
+    #submitImagePicker img{
+        margin: 3px 2px;
+    }
+
 </style>
 
 
@@ -531,6 +585,25 @@
         
 
         $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
+
+
+        $("#userImgFrom").click(function () {
+            $("#dialogsImg").modal('show');
+        });
+        
+        
+        $("#submitImagePicker img").click(function () {
+            var imgName = $(this).data('value');
+            $("#picChosen").val(imgName);
+            $("#submitImagePicker img").css('border', 'none');
+            $(this).css('border-width', '3px')
+                   .css('border-style', 'solid')
+                   .css('border-color', 'navy');
+        });
+
+        $("#ChangeImage").click(function () {
+            $("#submitImagePicker").submit();
+        });
 
 
 

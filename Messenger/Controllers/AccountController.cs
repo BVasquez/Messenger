@@ -19,6 +19,12 @@ namespace Messenger.Controllers
         }
 
 
+        public ActionResult About()
+        {
+            return View();
+        }
+
+
         [HttpPost]
         public ActionResult Login(UserAccessViewModels UserAccess)
         {
@@ -58,8 +64,12 @@ namespace Messenger.Controllers
 
         public ActionResult UserExists(string email)
         {
-            bool ex = db.Users.Any(x => x.Email != email);
-            return Json(ex, JsonRequestBehavior.AllowGet);
+            List<UserViewModels> user = db.Users.Where(x => x.Email == email).ToList();
+            if(user.Count == 0)
+            {
+                return Json(true, JsonRequestBehavior.AllowGet);
+            }
+            return Json(false, JsonRequestBehavior.AllowGet);
         }
 
 
