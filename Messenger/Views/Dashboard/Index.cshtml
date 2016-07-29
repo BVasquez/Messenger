@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<Messenger.Models.UserViewModels>
 @{
     ViewBag.Title = "Index";
+    int currUser = int.Parse(Request.QueryString["User"]);
 }
 
 <link href="~/Content/testing.css" rel="stylesheet" />
@@ -27,13 +28,12 @@
             <br />
             <p>@ViewBag.CurrentUserMessageStatus</p>
         </div>
-       
     </div>
     <div id="userTools">
         <input id="FindContact" type="text" class="form-control" placeholder="Find a contact or more" />
         <img id="addFriend" src="~/Images/Resources/add-user.png" />
         <img src="~/Images/Resources/UI_Blue_2_of_3_1-48.png" />
-        <img src="~/Images/Resources/gear_64.png" />
+        <img id="Personalize" src="~/Images/Resources/gear_64.png" />
         <img src="~/Images/Resources/windowslivemail.png" />
     </div>
     <div id="FriendList">
@@ -84,6 +84,41 @@
 
 
 
+
+
+<div class="modal fade" id="dialogsPersonalization">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Personalization</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("SetPersonalization", "Dashboard", new { currentUser = currUser }, FormMethod.Post, new { id="perForm", enctype="multipart/form-data" }))
+                {
+                    <label for="PerMessageStatus" class="control-label">Message Status</label>
+                    <input type="text" name="PerMessageStatus" id="PerMessageStatus" class="form-control" value="@ViewBag.CurrentUserMessageStatus" />
+                    <br />
+                    <label for="PerProfilePhoto">Photo Profile</label>
+                    <input type="file" name="PerProfilePhoto" id="PerProfilePhoto" />
+                    <br />
+                    <label for="PerBackground">Background</label>
+                    <input type="file" name="PerBackground" id="PerBackground" />
+                    <br />
+                    <label for="PerColor">Theme color</label>
+                    <input type="color" name="PerColor" id="PerColor" class="form-control" value="@ViewBag.CurrentUserColor" />
+                    <br />
+                    <label for="PerColorText">Text color</label>
+                    <input type="color" name="PerColorText" id="PerColorText" class="form-control" value="@ViewBag.CurrentUserTextColor" />
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type="button" class="btn btn-primary" id="SetPer">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -238,6 +273,19 @@
 
 <script>
     $(function () {
+
+        $("#Personalize").click(function () {
+            $("#dialogsPersonalization").modal('show');
+        });
+
+        $("#SetPer").click(function () {
+            $("#perForm").submit();
+        });
+
+
+
+
+
         $("#addFriend").click(function () {
             $("#dialogs").modal('show');
         });

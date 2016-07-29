@@ -80,5 +80,44 @@ namespace Messenger.Controllers
 
 
 
+        [HttpPost]
+        public ActionResult SetPersonalization(int currentUser, FormCollection val, HttpPostedFileBase PerProfilePhoto, HttpPostedFileBase PerBackground)
+        {
+           
+            if (ModelState.IsValid)
+            {
+                PersonalizationViewModels personalization = db.Personalizations.Find(currentUser);
+
+                if (PerProfilePhoto != null)
+                {
+                    string ProfilePhotoFormat = PerProfilePhoto.FileName.Substring(PerProfilePhoto.FileName.Length - 4);
+                    PerProfilePhoto.SaveAs(Server.MapPath("~/Images/Profile/") + string.Format("per_{0}{1}", currentUser, ProfilePhotoFormat));
+                }
+                if (PerBackground != null)
+                {
+                    string BackgroundFormat = PerBackground.FileName.Substring(PerBackground.FileName.Length - 4);
+                    PerBackground.SaveAs(Server.MapPath("~/Images/Background/") + string.Format("back_{0}{1}", currentUser, BackgroundFormat));
+                }
+
+                personalization.Status = val["perMessageStatus"];
+                personalization.Color = val["PerColor"];
+                personalization.TextColor = val["PerColorText"];
+                db.Entry(personalization).State = System.Data.Entity.EntityState.Modified;
+                db.SaveChanges();
+
+                return RedirectToAction("Index", "Dashboard", new { user = currentUser });
+            }
+            
+
+            return View();
+        }
+
+
+
+
+
+
+
+
     }
 }
