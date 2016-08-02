@@ -18,6 +18,9 @@ namespace Messenger.Models
         public DbSet<ConversationViewModels> Conversations { get; set; }
         public DbSet<FriendViewModels> Friends { get; set; }
         public DbSet<PersonalizationViewModels> Personalizations { get; set; }
+        public DbSet<GroupListViewModels> Groups { get; set; }
+        public DbSet<GroupMemberViewModels> Members { get; set; }
+        public DbSet<ConversationGroupViewModels> ConversationGroups { get; set; }
 
     }
 }

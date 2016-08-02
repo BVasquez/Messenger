@@ -25,6 +25,20 @@ namespace Messenger
             return peronsalization.Status;
         }
 
+        public static string getStatusColor(string statusName)
+        {
+            switch (statusName)
+            {
+                case "Online":
+                    return "#20b010";
+                case "Offline":
+                    return "#aadff0";
+                case "Busy":
+                    return "#db3127";
+            }
+            return "Online";
+        }
+
 
         public static string SetEmotionIcon(string messageLine)
         {

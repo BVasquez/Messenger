@@ -32,16 +32,23 @@
     <div id="userTools">
         <input id="FindContact" type="text" class="form-control" placeholder="Find a contact or more" />
         <img id="addFriend" src="~/Images/Resources/add-user.png" />
-        <img src="~/Images/Resources/UI_Blue_2_of_3_1-48.png" />
+        <img id="CreateGroup" src="~/Images/Resources/UI_Blue_2_of_3_1-48.png" />
         <img id="Personalize" src="~/Images/Resources/gear_64.png" />
         <a href="/account/login"><img src="~/Images/Resources/logout-48.png" /></a>
     </div>
     <div id="FriendList">
-        <h3>Friends</h3>
+        <h3>Friends <small>(@ViewBag.CurrentUserFriendsCount)</small></h3>
         <div class="list-group">
             @foreach (var friend in Model)
             {
-                <a id="lf-name" class = "list-group-item", target = "_blank" href="/Conversation/Friend?userFrom=@ViewBag.CurrentUser&userTo=@friend.UserId">@string.Format("{0} {1} - ", friend.FirstName, friend.LastName) <small id="lf-status">@Helper.getFriendMessageStatus(friend.UserId)</small></a>
+                <a id="lf-name" data-friendId="@friend.UserId" class="list-group-item lf-name" target = "_blank" href="/Conversation/Friend?userFrom=@ViewBag.CurrentUser&userTo=@friend.UserId&CV=@ViewBag.CurrentUser@friend.UserId">@string.Format("{0} {1} - ", friend.FirstName, friend.LastName) <small id="lf-status">@Helper.getFriendMessageStatus(friend.UserId)</small></a>
+            }
+        </div>
+        <h3>Groups <small>(@ViewBag.CurrentUserGroupCount)</small></h3>
+        <div class="list-group">
+            @foreach (var group in ViewBag.UsersGroup)
+            {
+                <a id="lf-name" class="list-group-item" target="_blank" href="/Conversation/Group?userFrom=@ViewBag.CurrentUser&GroupId=@group.GroupListId">@group.Name</a>
             }
         </div>
     </div>
@@ -121,10 +128,49 @@
 </div>
 
 
+<div class="modal fade" id="dialogsGroup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Create group</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("CreateGroup", "Conversation", new { UserFrom = currUser }, FormMethod.Post, new { id="CreateGroupFrom" } ))
+                {
+                    @Html.TextBox("GroupName", "", new { placeholder = "Type Group Name Here", @class = "form-control" })
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" class="btn btn-primary" id="SubmitCreateGroup">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-
-
+<div class="modal fade" id="dialogsDelete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Remove Friend</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure remove this Friend?</p>
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("RemoveUserFriend", "Dashboard", new { userFrom = currUser }, FormMethod.Post, new { @id = "submitDeleteUser" }))
+                {
+                    @Html.Hidden("friendToDelete", "")
+                    <button type="submit" class="btn btn-danger" id="SendImage">Yes</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">No</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -207,7 +253,7 @@
 
     #FriendList
     {
-        border: 1px solid #dbe9ff;
+       /* border: 1px solid #dbe9ff; */
         border-top-width: 0;
         width: 100%;
         height: 500px;
@@ -221,7 +267,7 @@
 
     border-radius: 5px;
     border: 3px solid @ViewBag.CurrentUserConnectionStateColor;
-    box-shadow: 0 0 5px black; 	
+    box-shadow: 0 0 5px @ViewBag.CurrentUserConnectionStateColor; 	
 }
 
 #photo { 
@@ -263,7 +309,11 @@
      margin-top: 5px;
  }
 
- 
+
+
+
+
+
 
 </style>
 
@@ -280,6 +330,15 @@
 
         $("#SetPer").click(function () {
             $("#perForm").submit();
+        });
+
+
+
+        $("#CreateGroup").click(function () {
+            $("#dialogsGroup").modal('show');
+        });
+        $("#SubmitCreateGroup").click(function () {
+            $("#CreateGroupFrom").submit();
         });
 
 
@@ -303,6 +362,17 @@
             $("#ConnectionStatusUpdater").submit();
         });
 
+        window.oncontextmenu = function () {
+            return false;
+        }
+
+        $(".lf-name").mousedown(function (e) {  
+            if (e.which == 3) {
+                var userchosen = $(this).data('friendid');
+                $("#friendToDelete").val(userchosen);
+                $("#dialogsDelete").modal('show');
+            }
+        });
 
 
 

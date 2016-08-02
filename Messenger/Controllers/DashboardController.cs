@@ -25,25 +25,22 @@ namespace Messenger.Controllers
                               where friend.UserId == User
                               select user;
 
+            var UsersGroup = from groups in db.Groups
+                                 join members in db.Members on groups.GroupListId equals members.GroupId
+                                 where members.Member == User
+                                 select groups;
+
             ViewBag.CurrentUserPhoto = personalizationCurrentUser.PhotoProfile;
             ViewBag.CurrentUserMessageStatus = personalizationCurrentUser.Status;
             ViewBag.CurrentUserTextColor = personalizationCurrentUser.TextColor;
             ViewBag.CurrentUserColor = personalizationCurrentUser.Color;
             ViewBag.CurrentUserConnectionState = personalizationCurrentUser.ConnectionStatus;
-            switch(personalizationCurrentUser.ConnectionStatus)
-            {
-                case "Online":
-                    ViewBag.CurrentUserConnectionStateColor = "#20b010";
-                    break;
-                case "Offline":
-                    ViewBag.CurrentUserConnectionStateColor = "#aadff0";
-                    break;
-                case "Busy":
-                    ViewBag.CurrentUserConnectionStateColor = "#db3127";
-                    break;
-            }
-
+            ViewBag.CurrentUserConnectionStateColor = Helper.getStatusColor(personalizationCurrentUser.ConnectionStatus);
+            ViewBag.CurrentUserFriendsCount = db.Friends.Where(x => x.UserId == User).Count();
+            ViewBag.CurrentUserGroupCount = UsersGroup.Count();
             ViewBag.CurrentUser = User;
+            ViewBag.UsersGroup = UsersGroup;
+
             return View(UsersFriend);
         }
 
@@ -112,6 +109,22 @@ namespace Messenger.Controllers
         }
 
 
+
+        [HttpPost]
+        public ActionResult RemoveUserFriend(int userFrom, int friendToDelete)
+        {
+            if (ModelState.IsValid)
+            {
+                List<FriendViewModels> friend = db.Friends.Where(x => x.Friend == friendToDelete  && x.UserId == userFrom).ToList();
+                if (friend.Count != 0)
+                {
+                    db.Friends.Remove(friend[0]);
+                    db.SaveChanges();
+                }
+
+            }
+            return RedirectToAction("Index", "Dashboard", new { user = userFrom });
+        }
 
 
 

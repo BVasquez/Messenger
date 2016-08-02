@@ -8,19 +8,25 @@ namespace Messenger
 {
     public class ChatHub : Hub
     {
-        public void Hello(string usermessage, string fontweight, string fontcursive, string fontcolor, string fontsize)
+        public void Hello(string usermessage, string fontweight, string fontcursive, string fontcolor, string fontsize, string who, string usersender)
         {
-            Clients.All.hello(usermessage, fontweight, fontcursive, fontcolor, fontsize);
+            Clients.All.hello(usermessage, fontweight, fontcursive, fontcolor, fontsize, who, usersender);
         }
 
-        public void Shake(bool active)
+        public void Shake(bool active,string who)
         {
-            Clients.All.shake(active);
+            Clients.All.shake(active, who);
         }
 
         public void ImageUploaded(bool reload)
         {
             Clients.All.imageuploaded(reload);
+        }
+
+        public void blabla(string mme)
+        {
+            
+
         }
     }
 }

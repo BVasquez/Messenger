@@ -234,12 +234,36 @@
     <Compile Include="Migrations\201607272218194_TextColor and StatusConnection added to PersonalizationViewModels.Designer.cs">
       <DependentUpon>201607272218194_TextColor and StatusConnection added to PersonalizationViewModels.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201607311840456_GroupList and GroupMember added.cs" />
+    <Compile Include="Migrations\201607311840456_GroupList and GroupMember added.Designer.cs">
+      <DependentUpon>201607311840456_GroupList and GroupMember added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607312008308_Something Changed.cs" />
+    <Compile Include="Migrations\201607312008308_Something Changed.Designer.cs">
+      <DependentUpon>201607312008308_Something Changed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607312040094_Personalization Field added to GroupList.cs" />
+    <Compile Include="Migrations\201607312040094_Personalization Field added to GroupList.Designer.cs">
+      <DependentUpon>201607312040094_Personalization Field added to GroupList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607312119187_ConversationGroups added.cs" />
+    <Compile Include="Migrations\201607312119187_ConversationGroups added.Designer.cs">
+      <DependentUpon>201607312119187_ConversationGroups added.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201607312213279_profilePhoto to GroupList added.cs" />
+    <Compile Include="Migrations\201607312213279_profilePhoto to GroupList added.Designer.cs">
+      <DependentUpon>201607312213279_profilePhoto to GroupList added.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\ConversationGroupViewModels.cs" />
     <Compile Include="Models\ConversationViewModels.cs" />
     <Compile Include="Models\FriendViewModels.cs" />
+    <Compile Include="Models\GroupListViewModels.cs" />
+    <Compile Include="Models\GroupMemberViewModels.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MemberListDTO.cs" />
     <Compile Include="Models\MessengerContext.cs" />
     <Compile Include="Models\PersonalizationViewModels.cs" />
     <Compile Include="Models\UserAccessViewModels.cs" />
@@ -329,6 +353,7 @@
     <Content Include="Images\Profile\default\def12.png" />
     <Content Include="Images\Profile\default\def22.png" />
     <Content Include="Images\Profile\defaultProfile.png" />
+    <Content Include="Images\Profile\defaultProfileGroup.png" />
     <Content Include="Images\Resources\gear_64.png" />
     <Content Include="Images\Profile\Per_1.jpg" />
     <Content Include="Images\Profile\per_2.jpg" />
@@ -482,6 +507,7 @@
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Personalization.cshtml" />
     <Content Include="Views\Account\About.cshtml" />
+    <Content Include="Views\Conversation\Group.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -524,6 +550,21 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201607272218194_TextColor and StatusConnection added to PersonalizationViewModels.resx">
       <DependentUpon>201607272218194_TextColor and StatusConnection added to PersonalizationViewModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607311840456_GroupList and GroupMember added.resx">
+      <DependentUpon>201607311840456_GroupList and GroupMember added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607312008308_Something Changed.resx">
+      <DependentUpon>201607312008308_Something Changed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607312040094_Personalization Field added to GroupList.resx">
+      <DependentUpon>201607312040094_Personalization Field added to GroupList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607312119187_ConversationGroups added.resx">
+      <DependentUpon>201607312119187_ConversationGroups added.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201607312213279_profilePhoto to GroupList added.resx">
+      <DependentUpon>201607312213279_profilePhoto to GroupList added.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

@@ -88,3 +88,8 @@ C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Deb
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.Statusfieldisdeleted.resources
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.PersonalizationModeladded.resources
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.TextColorandStatusConnectionaddedtoPersonalizationViewModels.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.GroupListandGroupMemberadded.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.SomethingChanged.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.PersonalizationFieldaddedtoGroupList.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.ConversationGroupsadded.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Debug\Messenger.Migrations.profilePhototoGroupListadded.resources

@@ -4,8 +4,10 @@
     ViewBag.Title = "Conversation";
     int userfrom = Convert.ToInt32(Request.QueryString["UserFrom"]);
     int userto = Convert.ToInt32(Request.QueryString["UserTo"]);
-    string imageposted = Request.QueryString["imagePosted"];
-}
+    string pair1 = Request.QueryString["UserFrom"] + Request.QueryString["UserTo"];
+    string pair2 = Request.QueryString["UserTo"] + Request.QueryString["UserFrom"];
+  }
+
 <link href="~/Content/testing.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
@@ -17,7 +19,7 @@
         <div id="MenuArea" style="background-color: @ViewBag.UserColorTo;">
             <ul class="nav nav-pills">
                 <li id="imageOpt"><a href="#">Photos</a></li>
-                <li class="disabled"><a href="#">Files</a></liclass="disabled">
+                <li class="disabled"><a href="#">Files</a></li>
                 <li class="disabled"><a href="#">Videos</a></li>
                 <li class="disabled"><a href="#">Calls</a></li>
                 <li class="disabled"><a href="#">Games</a></li>
@@ -30,7 +32,6 @@
                 <h3>@ViewBag.UserToChatName <small>(@ViewBag.UserConnectionStatus)</small></h3>
                 <p>@ViewBag.UserStatusMessage</p>
             </div>
-            <input type="hidden" value="@imageposted" id="LoadAfterPostImage" />
             <img id="userImgTo" src="@ViewBag.UserPhotoProfileTo" />
             <img id="userImgFrom" src="@ViewBag.UserPhotoProfileFrom" />
             <div id="ConversationBoard">
@@ -48,7 +49,7 @@
                 }
             </div>
             <div id="UserConversationArea">
-                @using (Html.BeginForm("Friend", "Conversation", new { userFrom = userfrom, userTo = userto }, FormMethod.Post))
+                @using (Html.BeginForm("Friend", "Conversation", new { userFrom = userfrom, userTo = userto, CV = pair1 }, FormMethod.Post))
                 {
                     @Html.AntiForgeryToken();
                     @Html.Hidden("Conversation", userfrom.ToString() + userto.ToString())
@@ -263,7 +264,7 @@
             
     border-radius: 5px;
     border: 4px solid @ViewBag.UserConnectionStateColorFrom;
-    box-shadow: 0 0px 5px black; 	
+    box-shadow: 0 0px 5px @ViewBag.UserConnectionStateColorFrom; 	
 }
 
 #userImgTo{
@@ -277,7 +278,7 @@
     border-width: 4px;
     border-style: solid;
     border-color: @ViewBag.UserConnectionStateColorTo;
-    box-shadow: 0 0px 5px black; 	
+    box-shadow: 0 0px 5px @ViewBag.UserConnectionStateColorTo; 	
 }
 
 #UserInfo h3, #UserInfo p, #UserInfo h3 small{
@@ -302,7 +303,7 @@
         padding-top: 5px;
         background-repeat: no-repeat;
         background-position-x: left top;
-        background-size: cover;
+    background-size: cover;
     }
 
 
@@ -330,6 +331,7 @@
 
     #Message
     {
+        color: black;
         margin-left: 17%;
         width: 100%;
         height: 65px;
@@ -378,8 +380,10 @@
     }
 
     #EmotionList img{
+        width: 29px;
+        height: 29px;
         border: 1px solid #c7c7c7;
-        margin: 1px;
+        margin: 1px 0px;
         padding: 3px;
     }
 
@@ -462,27 +466,24 @@
 
 <script>
     $(function () {
+
+
+        //SignalR
         var chat = $.connection.chatHub;
 
-        chat.client.Hello = function (usermessage, fontweight, fontcursive, fontcolor, fontsize) {
-            $("#ConversationBoard").append("<p class='userSaysName' data-userSaysId='@userto'>@Helper.getUser(userto)</p><p id='TempMessage' class='userSaysMessage' style='font-size:"+fontsize+";font-style:"+fontcursive+";font-weight:"+fontweight+";color:"+fontcolor+";'>" + usermessage + "</p>");
+        chat.client.Hello = function(usermessage, fontweight, fontcursive, fontcolor, fontsize, who, usersender){
+            if(who == @pair1 || who == @pair2)
+            $("#ConversationBoard").append("<p class='userSaysName' data-userSaysId='"+usersender+"'>"+usersender+"</p><p id='TempMessage' class='userSaysMessage' style='font-size:" + fontsize + ";font-style:" + fontcursive + ";font-weight:" + fontweight + ";color:" + fontcolor + ";'>" + usermessage + "</p>");
             $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
         };
 
-        chat.client.Shake = function (act) {
-            if (act == true) {
-                $("#board").effect("shake", { times: 5 }, 800);
+        chat.client.Shake = function (act, who) {
+            if (act == true){
+                if(who == "@pair1" || who == "@pair2"){
+                    $("#board").effect("shake", { times: 5 }, 800);
+                };
             };
-
-        }
-
-        chat.client.ImageUploaded = function (relo) {
-            if (relo == true) {
-                window.location.reload();
-            };
-        }
-
-
+        };
 
         $.connection.hub.start().done(function () {
             $("#ButtonSender").click(function () {
@@ -490,67 +491,43 @@
                 var fontweight = $("#Message").css('font-weight');
                 var fontcursive = $("#Message").css('font-style');
                 var fontcolor = $("#Message").css('color');
-                chat.server.hello($("#Message").val(), fontweight, fontcursive, fontcolor, fontsize);
+                chat.server.hello($("#Message").val(), fontweight, fontcursive, fontcolor, fontsize, "@Request.QueryString["CV"]", "@Helper.getUser(userfrom)");
             });
 
             $("#ShakeAnimation").click(function () {
-                chat.server.shake(true);
+                chat.server.shake(true, @Request.QueryString["CV"]);
             });
-            
-
-            //$("body").ready(function () {
-            //    if ($("#LoadAfterPostImage").val() == "True")
-            //    {
-            //        chat.server.imageUploaded(true);
-            //        $("#LoadAfterPostImage").val("False")
-            //    }
-            //});
-
-            
-
-
         });
 
 
 
+        //Miscellaneous
+        $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
 
-
-
-
-
-
-        $("#Message").focus(function () {
-            var fontsize = $("#FormatSize").val();
-            var fontweight = $("#FormatWeight").val();
-            var fontcursive = $("#FormatCursive").val();
-            var fontcolor = $("#FormatColor").val();
-
-            $("#Message").css('font-size', fontsize)
-                         .css('font-weight', fontweight)
-                         .css('font-style', fontcursive)
-                         .css('color', fontcolor);
+        $("body").ready(function(){           
+            $("#FormatSize").val('15px');
+            $("#FormatWeight").val('normal');
+            $("#FormatCursive").css('normal');
+            $("#FormatColor").css('black');
         });
 
-        $(".userSaysName").css('color', 'red');
-        $(".userSaysName[data-userSaysId='@userfrom']").css('color', 'blue');
+
+
+        //Message Tools
+        //***** Very important render Emoji *****
+        $(".userSaysMessage").each(function () {
+            var tar = $(this).text();
+            var html = $.parseHTML(tar);
+            $(this).html(html);
+        });
 
         $("#Emotions").click(function () {
             $("#EmotionList").fadeToggle();
         });
 
-        //$("#ShakeAnimation").click(function () {
-        //    $("#board").effect("shake", {times: 5}, 800);
-        //});
-
         $(".emoicon").click(function(){
             var emotiontext = $(this).data("value");
             $("#Message").val($("#Message").val() + " " + emotiontext + " ");
-        });
-        //Very important render Emoji
-        $(".userSaysMessage").each(function () {
-            var tar = $(this).text();
-            var html = $.parseHTML(tar);
-            $(this).html(html);
         });
 
         $("#Formatting").click(function () {
@@ -572,26 +549,19 @@
 
 
 
-        //modals
+        //Modals
         $("#imageOpt").click(function () {
             $("#dialogs").modal('show');
         });
 
-        $(".modal-footer")
         $("#SendImage").click(function () {
             $("#submitUploadImage").submit();
         });
 
-        
-
-        $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
-
-
         $("#userImgFrom").click(function () {
             $("#dialogsImg").modal('show');
         });
-        
-        
+
         $("#submitImagePicker img").click(function () {
             var imgName = $(this).data('value');
             $("#picChosen").val(imgName);
@@ -604,8 +574,6 @@
         $("#ChangeImage").click(function () {
             $("#submitImagePicker").submit();
         });
-
-
 
 
     });
