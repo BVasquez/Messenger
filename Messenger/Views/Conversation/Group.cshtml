@@ -1,14 +1,13 @@
 ﻿@model IEnumerable<Messenger.Models.ConversationGroupViewModels>
 @{
-    ViewBag.Title = "Conversation";
     int userfrom = Convert.ToInt32(Request.QueryString["UserFrom"]);
     int groupid = Convert.ToInt32(Request.QueryString["GroupId"]);
+    ViewBag.Title = Helper.getGroupName(groupid);
 }
-<link href="~/Content/testing.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
 <script src="~/signalr/hubs"></script>
-
+<link href="~/Content/testing.css" rel="stylesheet" />
 
 <div class="row">
     <div class="col-md-12" id="board">
@@ -287,6 +286,17 @@
 
 
 
+<div id="Notification">
+    <div>
+        <p>TBT Live Messenger</p>
+        <span>x</span>
+    </div>
+    <p id="notiMessage"></p>
+    <a href="#" target="_blank"></a>
+</div>
+
+
+
 <style>
     .showImage{
         width: 300px;
@@ -550,6 +560,11 @@
 
 
 
+
+
+
+  
+
 </style>
 
 
@@ -557,9 +572,44 @@
 
 <script>
     $(function () {
-        
+
         //SignalR
         var chat = $.connection.chatHub;
+        var NoticationWho;
+
+        $.connection.hub.start().done(function () {
+            $("#FriendChose").click(function () {
+                chat.server.notificationGroup(true, "@groupid", "@Helper.getGroupName(groupid)", NoticationWho);
+            });
+        });
+
+        chat.client.NotificationGroup = function (active, groupid, groupname, who) {
+            if (active == true) {
+                if (who == "@userfrom") {
+                    $("#notiMessage").text("You have been added " + groupname + " group");
+                    $("#Notification a").text("Go there");
+                    $("#Notification a").attr("href", "/Conversation/Group?userFrom=" + who + "&GroupId=" + groupid + "");
+                    $("#Notification").show("drop", { direction: "down" }, 500).delay(6000).fadeOut(1000);
+                    $("#Notification div span").click(function () { $("#Notification").css('display', 'none'); });
+                }
+            }
+        };
+
+        chat.client.NotificationFriend = function (active, userto, userfrom, message)
+        {
+            if (active == true) {
+                if(userto == "@userfrom"){
+                        $("#notiMessage").text(message);
+                        $("#Notification a").attr("href", "/Conversation/Friend?userFrom="+userto+"&userTo="+userfrom+"&CV="+userto+""+userfrom+"");
+                        $("#Notification a").text("@Helper.getUser(userfrom)");
+                        $("#Notification").show("drop", { direction: "down" }, 500).delay(6000).fadeOut(1000);
+                        $("#Notification div span").click(function () { $("#Notification").css('display', 'none'); });
+                    }
+            }
+        }
+
+
+    //-----------------------------------------------
 
         chat.client.Hello = function(usermessage, fontweight, fontcursive, fontcolor, fontsize, who, usersender){
             if (who == "@groupid") {
@@ -575,6 +625,8 @@
                 };
             };
         };
+
+
 
         //-------------
 
@@ -594,10 +646,6 @@
 
 
 
-
-
-
-
         //Dealing with Member List
         $("#memberOpt").click(function () {
             $("#FriendListdialogs").modal('show');
@@ -605,14 +653,14 @@
 
         $(".friendMember").click(function () {
             var usrId = $(this).data("userid");
+            NoticationWho = usrId;
             $("#Member").val(usrId);
         });
+
 
         $("#FriendChose").click(function () {
             $("#submitMemberToGroup").submit();
         });
-
-
 
 
         //Dealing Conversation Tools
@@ -680,7 +728,7 @@
         //Miscellanious
         $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
 
-        $("body").ready(function(){           
+        $("body").ready(function(){
             $("#FormatSize").val('15px');
             $("#FormatWeight").val('normal');
             $("#FormatCursive").css('normal');
@@ -691,7 +739,7 @@
             return false;
         }
 
-        $(".memberImg").mousedown(function (e) {  
+        $(".memberImg").mousedown(function (e) {
             if (e.which == 3) {
                 var userchosen = $(this).data('memberid');
                 $("#UserToDelete").val(userchosen);
@@ -699,6 +747,29 @@
             }
         });
 
+        //----------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     });
 </script>
+<script src="~/Scripts/base/Notification.js"></script>

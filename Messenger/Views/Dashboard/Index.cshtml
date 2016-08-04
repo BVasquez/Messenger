@@ -1,11 +1,13 @@
 ﻿@model IEnumerable<Messenger.Models.UserViewModels>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Me";
     int currUser = int.Parse(Request.QueryString["User"]);
 }
 
 <link href="~/Content/testing.css" rel="stylesheet" />
-
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+<script src="~/signalr/hubs"></script>
 
 <div id="Container">
     <div id="UserContainer">
@@ -171,12 +173,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
 
 
 
@@ -374,6 +370,9 @@
             }
         });
 
+
+
+        
 
 
     });

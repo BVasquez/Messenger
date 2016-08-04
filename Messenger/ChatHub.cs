@@ -23,10 +23,16 @@ namespace Messenger
             Clients.All.imageuploaded(reload);
         }
 
-        public void blabla(string mme)
+        public void NotificationGroup(bool active, string groupid, string groupname, string who)
         {
-            
-
+            Clients.All.notificationGroup(active, groupid, groupname, who);
         }
+
+        public void NotificationFriend(bool active, string userto, string userfrom, string message)
+        {
+            Clients.All.notificationFriend(active, userto, userfrom, message);
+        }
+
+
     }
 }

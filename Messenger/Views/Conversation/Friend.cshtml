@@ -1,18 +1,17 @@
 ﻿
 @model IEnumerable<Messenger.Models.ConversationViewModels>
 @{
-    ViewBag.Title = "Conversation";
     int userfrom = Convert.ToInt32(Request.QueryString["UserFrom"]);
     int userto = Convert.ToInt32(Request.QueryString["UserTo"]);
     string pair1 = Request.QueryString["UserFrom"] + Request.QueryString["UserTo"];
     string pair2 = Request.QueryString["UserTo"] + Request.QueryString["UserFrom"];
+    ViewBag.Title = Helper.getUser(userto);
   }
 
 <link href="~/Content/testing.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
 <script src="~/signalr/hubs"></script>
-
 
 <div class="row">
     <div class="col-md-12" id="board">
@@ -238,6 +237,14 @@
     </div>
 </div>
 
+<div id="Notification">
+    <div>
+        <p>TBT Live Messenger</p>
+        <span>x</span>
+    </div>
+    <p id="notiMessage"></p>
+    <a href="#" target="_blank"></a>
+</div>
 
 
 
@@ -459,6 +466,12 @@
         margin: 3px 2px;
     }
 
+
+
+
+
+
+
 </style>
 
 
@@ -467,9 +480,39 @@
 <script>
     $(function () {
 
-
         //SignalR
         var chat = $.connection.chatHub;
+
+        chat.client.NotificationGroup = function (active, groupid, groupname, who) {
+            if (active == true) {
+                if (who == "@userfrom") {
+                    $("#notiMessage").text("You have been added " + groupname + " group.");
+                    $("#Notification a").text("Go there");
+                    $("#Notification a").attr("href", "/Conversation/Group?userFrom=" + who + "&GroupId=" + groupid + "");
+                    $("#Notification").show("drop", { direction: "down" }, 500).delay(6000).fadeOut(1000);
+                    $("#Notification div span").click(function () { $("#Notification").css('display', 'none'); });
+                }
+            }
+        };
+
+        chat.client.NotificationFriend = function (active, userto, userfrom, message)
+        {
+            if (active == true) {
+                if(userto == "@userfrom"){
+                    if(userfrom != "@userto")
+                    {
+                        $("#notiMessage").text(message);
+                        $("#Notification a").attr("href", "/Conversation/Friend?userFrom="+userto+"&userTo="+userfrom+"&CV="+userto+""+userfrom+"");
+                        $("#Notification a").text("@Helper.getUser(userfrom)");
+                        $("#Notification").show("drop", { direction: "down" }, 500).delay(6000).fadeOut(1000);
+                        $("#Notification div span").click(function () { $("#Notification").css('display', 'none'); });
+                    }
+                }
+            }
+        }
+
+
+        //--------------------------------------------------------------------------------
 
         chat.client.Hello = function(usermessage, fontweight, fontcursive, fontcolor, fontsize, who, usersender){
             if(who == @pair1 || who == @pair2)
@@ -492,6 +535,7 @@
                 var fontcursive = $("#Message").css('font-style');
                 var fontcolor = $("#Message").css('color');
                 chat.server.hello($("#Message").val(), fontweight, fontcursive, fontcolor, fontsize, "@Request.QueryString["CV"]", "@Helper.getUser(userfrom)");
+                chat.server.notificationFriend(true,"@userto","@userfrom",$("#Message").val());
             });
 
             $("#ShakeAnimation").click(function () {
@@ -504,7 +548,7 @@
         //Miscellaneous
         $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
 
-        $("body").ready(function(){           
+        $("body").ready(function(){
             $("#FormatSize").val('15px');
             $("#FormatWeight").val('normal');
             $("#FormatCursive").css('normal');
@@ -578,3 +622,4 @@
 
     });
 </script>
+

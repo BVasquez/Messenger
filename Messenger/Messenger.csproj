@@ -272,6 +272,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="favicon.ico" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\testing.css" />
@@ -316,7 +317,6 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
@@ -327,7 +327,7 @@
     <Content Include="Images\Developers\Carlos.jpeg" />
     <Content Include="Images\Developers\Carmen.jpeg" />
     <Content Include="Images\Developers\Jeison.jpeg" />
-    <Content Include="Images\Developers\Lisandro.jpg" />
+    <Content Include="Images\Developers\Lisandro.jpeg" />
     <Content Include="Images\Developers\Massiel.jpeg" />
     <Content Include="Images\Developers\Wilkander.jpeg" />
     <Content Include="Images\Profile\default\def1.png" />
@@ -457,6 +457,7 @@
     <Content Include="Images\Resources\UI_Blue_2_of_3_1-48.png" />
     <Content Include="Images\Resources\windowslivemail.png" />
     <Content Include="Images\Resources\zumbidomessenger.gif" />
+    <Content Include="Scripts\base\Notification.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\IIS.pubxml" />

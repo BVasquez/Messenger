@@ -18,6 +18,14 @@ namespace Messenger
             return string.Format("{0} {1}", user.FirstName, user.LastName);
         }
 
+        public static string getGroupName(int groupId)
+        {
+            MessengerContext db = new MessengerContext();
+            GroupListViewModels group = db.Groups.Find(groupId);
+            return group.Name;
+        }
+
+
         public static string getFriendMessageStatus(int friend)
         {
             MessengerContext db = new MessengerContext();
