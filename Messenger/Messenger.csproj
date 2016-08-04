@@ -272,6 +272,7 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="help.html" />
     <Content Include="favicon.ico" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -330,6 +331,18 @@
     <Content Include="Images\Developers\Lisandro.jpeg" />
     <Content Include="Images\Developers\Massiel.jpeg" />
     <Content Include="Images\Developers\Wilkander.jpeg" />
+    <Content Include="Images\Help\1.jpg" />
+    <Content Include="Images\Help\10.jpg" />
+    <Content Include="Images\Help\11.jpg" />
+    <Content Include="Images\Help\12.jpg" />
+    <Content Include="Images\Help\2.jpg" />
+    <Content Include="Images\Help\3.jpg" />
+    <Content Include="Images\Help\4.jpg" />
+    <Content Include="Images\Help\5.jpg" />
+    <Content Include="Images\Help\6.jpg" />
+    <Content Include="Images\Help\7.jpg" />
+    <Content Include="Images\Help\8.jpg" />
+    <Content Include="Images\Help\9.jpg" />
     <Content Include="Images\Profile\default\def1.png" />
     <Content Include="Images\Profile\default\def2.png" />
     <Content Include="Images\Profile\default\def3.png" />
