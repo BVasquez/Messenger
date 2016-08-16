@@ -1,164 +1,176 @@
 ﻿
 @model IEnumerable<Messenger.Models.ConversationViewModels>
 @{
-    ViewBag.Title = "Conversation";
     int userfrom = Convert.ToInt32(Request.QueryString["UserFrom"]);
     int userto = Convert.ToInt32(Request.QueryString["UserTo"]);
-    string imageposted = Request.QueryString["imagePosted"];
-}
+    string pair1 = Request.QueryString["UserFrom"] + Request.QueryString["UserTo"];
+    string pair2 = Request.QueryString["UserTo"] + Request.QueryString["UserFrom"];
+    ViewBag.Title = Helper.getUser(userto);
+  }
 
+<link href="~/Content/testing.css" rel="stylesheet" />
 <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
 <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
 <script src="~/signalr/hubs"></script>
 
-
-<div class="row">
-    <div class="col-md-12" id="board">
-        <div id="MenuArea">
-            <ul class="nav nav-pills">
-                <li id="imageOpt"><a href="#">Photos</a></li>
-                <li><a href="#">Files</a></li>
-                <li class="disabled"><a href="#">Videos</a></li>
-                <li class="disabled"><a href="#">Calls</a></li>
-                <li class="disabled"><a href="#">Games</a></li>
-                <li class="disabled"><a href="#">Activities</a></li>
-            </ul>
+<div class="container-fluid board">
+    <div class="row">
+        <div class="col-md-12">
+            <div id="MenuArea" style="background-color: @ViewBag.UserColorTo;">
+                <ul class="nav nav-pills">
+                    <li id="imageOpt"><a href="#">Photos</a></li>
+                    <li class="disabled"><a href="#">Files</a></li>
+                    <li class="disabled"><a href="#">Videos</a></li>
+                    <li class="disabled"><a href="#">Calls</a></li>
+                    <li class="disabled hidden-xs"><a href="#">Games</a></li>
+                    <li class="disabled hidden-xs"><a href="#">Activities</a></li>
+                </ul>
+            </div>
         </div>
-
-        <div id="ConversationArea">
-            <div id="UserInfo">
-                <h3>@ViewBag.UserToChatName <small>(Available)</small></h3>
-                <p>Any Status is put here...</p>
-            </div>
-            <input type="hidden" value="@imageposted" id="LoadAfterPostImage" />
-            <img id="userImgTo" src="~/Images/Resources/signin_avatar_default.png" />
-            <img id="userImgFrom" src="~/Images/Resources/signin_avatar_default.png" />
-            <div id="ConversationBoard">
-                @foreach (var conv in Model)
-                {
-                    <p class="userSaysName" data-userSaysId="@conv.From">@Helper.getUser(conv.From)</p>
-                    if(conv.DataType == "image")
-                    {
-                        <a href="~/Images/Posted/@conv.Message" target="_blank"><img class="showImage" src="~/Images/Posted/@conv.Message" /></a><br />
-                    }
-                    else
-                    {
-                        <p class="userSaysMessage" style="font-weight:@conv.FormatWeight; font-style:@conv.FormatCursive; font-size:@conv.FormatSize; color:@conv.FormatColor;">@Helper.SetEmotionIcon(conv.Message)</p>
-                    }
-                }
-            </div>
-            <div id="UserConversationArea">
-                @using (Html.BeginForm("Friend", "Conversation", new { userFrom = userfrom, userTo = userto }, FormMethod.Post))
-                {
-                    @Html.AntiForgeryToken();
-                    @Html.Hidden("Conversation", userfrom.ToString() + userto.ToString())
-                    @Html.Hidden("From", userfrom)
-                    @Html.Hidden("To", userto)
-                    @Html.Hidden("Time", DateTime.Now)
-                    <textarea name="Message" id="Message" class="form-control"></textarea>
-                    <div id="ConversationTools">
-                        <input type="submit" class="btn btn-primary" id="ButtonSender" value="OK" />
-                        <img id="Emotions" src="~/Images/Emotions/regular_smile.gif" />
-                        <img id="ShakeAnimation" src="~/Images/Resources/zumbidomessenger.gif" />
-                        <img id="Formatting" src="~/Images/Resources/BT_underline-48.png" />
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div id="ConversationArea">
+                <div id="convHeader">
+                    <div id="UserInfo" style="background-image: url('@ViewBag.UserBackgroundTo');">
+                        <img id="userImgTomini" src="@ViewBag.UserPhotoProfileTo" />
+                        <div>
+                            <h3>@ViewBag.UserToChatName <small>(@ViewBag.UserConnectionStatus)</small></h3>
+                            <p>@ViewBag.UserStatusMessage</p>
+                        </div>
                     </div>
-
-
-                    <div id="FormattingArea">
-                        <label>Font Size: </label>
-                        @Html.DropDownList("FormatSize", ViewBag.FormatFontSizeOptions as SelectList, new { @class = "form-control" })
-                        <label>Font Weight: </label>
-                        @Html.DropDownList("FormatWeight", ViewBag.FormatFontWeightOptions as SelectList, new { @class = "form-control" })
-                        <label>Font Cursive: </label>
-                        @Html.DropDownList("FormatCursive", ViewBag.FormatFontCursiveOptions as SelectList, new { @class = "form-control" })
-                        <label>Font Color: </label>
-                        <input id="FormatColor" name="FormatColor" type="color" />
-                        <button type="button" id="applyFormat" class="btn btn-primary">Apply</button>
+                </div>
+                <img id="userImgTo" class="hidden-xs" src="@ViewBag.UserPhotoProfileTo" />
+                <img id="userImgFrom" class="hidden-xs" src="@ViewBag.UserPhotoProfileFrom" />
+                <div id="convBody">
+                    <div id="ConversationBoard">
+                        @foreach (var conv in Model)
+                        {
+                            <p class="userSaysName" data-userSaysId="@conv.From">@Helper.getUser(conv.From)</p>
+                            if (conv.DataType == "image")
+                            {
+                                <a href="~/Images/Posted/@conv.Message" target="_blank"><img class="showImage" src="~/Images/Posted/@conv.Message" /></a><br />
+                            }
+                            else
+                            {
+                                <p class="userSaysMessage" style="font-weight:@conv.FormatWeight; font-style:@conv.FormatCursive; font-size:@conv.FormatSize; color:@conv.FormatColor; margin-left: 5px;">@Helper.SetEmotionIcon(conv.Message)</p>
+                            }
+                        }
                     </div>
-                }
-                    <div id="EmotionList">
-                        <img class="emoicon" src="~/Images/Emotions/47_47.gif" data-value=":-x" />
-                        <img class="emoicon" src="~/Images/Emotions/48_48.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/49_49.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/50_50.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/51_51.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/52_52.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/53_53.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/55_55.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/56_56.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/57_57.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/58_58.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/59_59.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/60_60.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/61_61.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/62_62.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/63_63.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/64_64.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/66_66.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/69_69.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/70_70.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/71_71.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/72_72.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/73_73.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/74_74.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/75_75.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/77_77.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/angel_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/angry_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/asl.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/bat.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/beer_mug.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/brb.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/broken_heart.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/cake.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/camera.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/cat.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/cig.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/clock.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/coffee.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/confused_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/cry_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/devil_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/dog.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/enflag.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/envelope.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/film.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/girl.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/girl_hug.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/guy.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/guy_hug.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/handcuffs.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/heart.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/high5.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/icon3.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/kiss.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/lightbulb.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/martini.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/messenger.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/moon.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/nlflag.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/note.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/omg_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/phone.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/present.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/red_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/regular_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/rose.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/sad_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/shades_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/star.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/teeth_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/thumbs_down.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/thumbs_up.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/tongue_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/turtle.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/what_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/wilted_rose.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/wink_smile.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/xbox.gif" />
-                        <img class="emoicon" src="~/Images/Emotions/xfingers.gif" />
+                </div>
+                <div id="convFooter">
+                    <div id="UserConversationArea">
+                        @using (Html.BeginForm("Friend", "Conversation", new { userFrom = userfrom, userTo = userto, CV = pair1 }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken();
+                            @Html.Hidden("Conversation", userfrom.ToString() + userto.ToString())
+                            @Html.Hidden("From", userfrom)
+                            @Html.Hidden("To", userto)
+                            @Html.Hidden("Time", DateTime.Now)
+                            <textarea name="Message" id="Message" class="form-control"></textarea>
+                            <div id="ConversationTools">
+                                <input type="submit" class="btn btn-primary" id="ButtonSender" value="OK" />
+                                <img id="Emotions" src="~/Images/Emotions/regular_smile.gif" />
+                                <img id="ShakeAnimation" src="~/Images/Resources/zumbidomessenger.gif" />
+                                <img id="Formatting" src="~/Images/Resources/BT_underline-48.png" />
+                            </div>
+
+                            <div id="FormattingArea">
+                                <label>Font Size: </label>
+                                @Html.DropDownList("FormatSize", ViewBag.FormatFontSizeOptions as SelectList, new { @class = "form-control" })
+                                <label>Font Weight: </label>
+                                @Html.DropDownList("FormatWeight", ViewBag.FormatFontWeightOptions as SelectList, new { @class = "form-control" })
+                                <label>Font Cursive: </label>
+                                @Html.DropDownList("FormatCursive", ViewBag.FormatFontCursiveOptions as SelectList, new { @class = "form-control" })
+                                <label>Font Color: </label>
+                                <input id="FormatColor" name="FormatColor" type="color" />
+                                <button type="button" id="applyFormat" class="btn btn-primary">Apply</button>
+                            </div>
+                        }
+                        <div id="EmotionList">
+                            <img class='emoicon' src='~/Images/Emotions/47_47.gif' data-value=':-x' />
+                            <img class='emoicon' src='~/Images/Emotions/48_48.gif' data-value=':-e' />
+                            <img class='emoicon' src='~/Images/Emotions/49_49.gif' data-value=':-B' />
+                            <img class='emoicon' src='~/Images/Emotions/50_50.gif' data-value=':-z' />
+                            <img class='emoicon' src='~/Images/Emotions/51_51.gif' data-value=':-2' />
+                            <img class='emoicon' src='~/Images/Emotions/52_52.gif' data-value=':-W' />
+                            <img class='emoicon' src='~/Images/Emotions/53_53.gif' data-value=':-a' />
+                            <img class='emoicon' src='~/Images/Emotions/55_55.gif' data-value=':-t' />
+                            <img class='emoicon' src='~/Images/Emotions/56_56.gif' data-value=':-r' />
+                            <img class='emoicon' src='~/Images/Emotions/57_57.gif' data-value=':-i' />
+                            <img class='emoicon' src='~/Images/Emotions/58_58.gif' data-value=':-1' />
+                            <img class='emoicon' src='~/Images/Emotions/59_59.gif' data-value=':-2' />
+                            <img class='emoicon' src='~/Images/Emotions/60_60.gif' data-value=':-3' />
+                            <img class='emoicon' src='~/Images/Emotions/61_61.gif' data-value=':-4' />
+                            <img class='emoicon' src='~/Images/Emotions/62_62.gif' data-value=':-5' />
+                            <img class='emoicon' src='~/Images/Emotions/63_63.gif' data-value=':-0' />
+                            <img class='emoicon' src='~/Images/Emotions/64_64.gif' data-value=':-c' />
+                            <img class='emoicon' src='~/Images/Emotions/66_66.gif' data-value=':-7' />
+                            <img class='emoicon' src='~/Images/Emotions/69_69.gif' data-value=':-m' />
+                            <img class='emoicon' src='~/Images/Emotions/70_70.gif' data-value=':-v' />
+                            <img class='emoicon' src='~/Images/Emotions/71_71.gif' data-value=':-6' />
+                            <img class='emoicon' src='~/Images/Emotions/72_72.gif' data-value=':-9' />
+                            <img class='emoicon' src='~/Images/Emotions/73_73.gif' data-value=':-n' />
+                            <img class='emoicon' src='~/Images/Emotions/74_74.gif' data-value=':-#' />
+                            <img class='emoicon' src='~/Images/Emotions/75_75.gif' data-value=':-&' />
+                            <img class='emoicon' src='~/Images/Emotions/77_77.gif' data-value=':-l' />
+                            <img class='emoicon' src='~/Images/Emotions/angel_smile.gif' data-value=':-)' />
+                            <img class='emoicon' src='~/Images/Emotions/angry_smile.gif' data-value=':-?' />
+                            <img class='emoicon' src='~/Images/Emotions/asl.gif' data-value=':-r' />
+                            <img class='emoicon' src='~/Images/Emotions/bat.gif' data-value=':-g' />
+                            <img class='emoicon' src='~/Images/Emotions/beer_mug.gif' data-value=':-¡' />
+                            <img class='emoicon' src='~/Images/Emotions/brb.gif' data-value=':-¿' />
+                            <img class='emoicon' src='~/Images/Emotions/broken_heart.gif' data-value=':-/' />
+                            <img class='emoicon' src='~/Images/Emotions/cake.gif' data-value=':-k' />
+                            <img class='emoicon' src='~/Images/Emotions/camera.gif' data-value=':-h' />
+                            <img class='emoicon' src='~/Images/Emotions/cat.gif' data-value=':-u' />
+                            <img class='emoicon' src='~/Images/Emotions/cig.gif' data-value=':-f' />
+                            <img class='emoicon' src='~/Images/Emotions/clock.gif' data-value=':-8' />
+                            <img class='emoicon' src='~/Images/Emotions/coffee.gif' data-value=':-q' />
+                            <img class='emoicon' src='~/Images/Emotions/confused_smile.gif' data-value=':-s' />
+                            <img class='emoicon' src='~/Images/Emotions/cry_smile.gif' data-value=':-}' />
+                            <img class='emoicon' src='~/Images/Emotions/devil_smile.gif' data-value=':-.' />
+                            <img class='emoicon' src='~/Images/Emotions/dog.gif' data-value=':-]' />
+                            <img class='emoicon' src='~/Images/Emotions/enflag.gif' data-value=':-*' />
+                            <img class='emoicon' src='~/Images/Emotions/envelope.gif' data-value=':-+' />
+                            <img class='emoicon' src='~/Images/Emotions/film.gif' data-value=':-{' />
+                            <img class='emoicon' src='~/Images/Emotions/girl.gif' data-value=':-ñ' />
+                            <img class='emoicon' src='~/Images/Emotions/girl_hug.gif' data-value=':-=' />
+                            <img class='emoicon' src='~/Images/Emotions/guy.gif' data-value=':-!' />
+                            <img class='emoicon' src='~/Images/Emotions/guy_hug.gif' data-value=':-%' />
+                            <img class='emoicon' src='~/Images/Emotions/handcuffs.gif' data-value=':-A' />
+                            <img class='emoicon' src='~/Images/Emotions/heart.gif' data-value=':-C' />
+                            <img class='emoicon' src='~/Images/Emotions/high5.gif' data-value=':-D' />
+                            <img class='emoicon' src='~/Images/Emotions/icon3.gif' data-value=':-E' />
+                            <img class='emoicon' src='~/Images/Emotions/kiss.gif' data-value=':-F' />
+                            <img class='emoicon' src='~/Images/Emotions/lightbulb.gif' data-value=':-G' />
+                            <img class='emoicon' src='~/Images/Emotions/martini.gif' data-value=':-H' />
+                            <img class='emoicon' src='~/Images/Emotions/messenger.gif' data-value=':-I' />
+                            <img class='emoicon' src='~/Images/Emotions/moon.gif' data-value=':-J' />
+                            <img class='emoicon' src='~/Images/Emotions/nlflag.gif' data-value=':-K' />
+                            <img class='emoicon' src='~/Images/Emotions/note.gif' data-value=':-^' />
+                            <img class='emoicon' src='~/Images/Emotions/omg_smile.gif' data-value=':-o' />
+                            <img class='emoicon' src='~/Images/Emotions/phone.gif' data-value=':-~' />
+                            <img class='emoicon' src='~/Images/Emotions/present.gif' data-value=':-M' />
+                            <img class='emoicon' src='~/Images/Emotions/red_smile.gif' data-value=':-$' />
+                            <img class='emoicon' src='~/Images/Emotions/regular_smile.gif' data-value=':--' />
+                            <img class='emoicon' src='~/Images/Emotions/rose.gif' data-value=':-N' />
+                            <img class='emoicon' src='~/Images/Emotions/sad_smile.gif' data-value=':-(' />
+                            <img class='emoicon' src='~/Images/Emotions/shades_smile.gif' data-value=':-O' />
+                            <img class='emoicon' src='~/Images/Emotions/star.gif' data-value=':-Q' />
+                            <img class='emoicon' src='~/Images/Emotions/teeth_smile.gif' data-value=':-D' />
+                            <img class='emoicon' src='~/Images/Emotions/thumbs_down.gif' data-value=':-w' />
+                            <img class='emoicon' src='~/Images/Emotions/thumbs_up.gif' data-value=':-R' />
+                            <img class='emoicon' src='~/Images/Emotions/tongue_smile.gif' data-value=':-p' />
+                            <img class='emoicon' src='~/Images/Emotions/turtle.gif' data-value=':-S' />
+                            <img class='emoicon' src='~/Images/Emotions/what_smile.gif' data-value=':-T' />
+                            <img class='emoicon' src='~/Images/Emotions/wilted_rose.gif' data-value=':-U' />
+                            <img class='emoicon' src='~/Images/Emotions/wink_smile.gif' data-value=':-V' />
+                            <img class='emoicon' src='~/Images/Emotions/xbox.gif' data-value=':-X' />
+                            <img class='emoicon' src='~/Images/Emotions/xfingers.gif' data-value=':-Z' />
+                        </div>
                     </div>
-                
+                </div>
             </div>
         </div>
     </div>
@@ -191,151 +203,186 @@
 
 
 
+<div class="modal fade" id="dialogsImg">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Choose Image</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("setPhotoProfile", "Conversation", new { userFrom = userfrom, userTo = userto }, FormMethod.Post, new { enctype = "multipart/form-data", @id="submitImagePicker" }))
+                {
+                    <label class="control-label">Choose an Image</label>
+                    <br />
+                    <img src="/Images/Profile/default/def1.png" data-value="def1" />
+                    <img src="/Images/Profile/default/def2.png" data-value="def2" />
+                    <img src="/Images/Profile/default/def4.png" data-value="def4" />
+                    <img src="/Images/Profile/default/def5.png" data-value="def5" />
+                    <img src="/Images/Profile/default/def6.png" data-value="def6" />
+                    <img src="/Images/Profile/default/def7.png" data-value="def7" />
+                    <img src="/Images/Profile/default/def8.png" data-value="def8" />
+                    <img src="/Images/Profile/default/def9.png" data-value="def9" />
+                    <img src="/Images/Profile/default/def10.png" data-value="def10" />
+                    <img src="/Images/Profile/default/def11.png" data-value="def11" />
+                    <img src="/Images/Profile/default/def12.png" data-value="def12" />
+                    <img src="/Images/Profile/default/def13.png" data-value="def13" />
+                    <img src="/Images/Profile/default/def14.png" data-value="def14" />
+                    <img src="/Images/Profile/default/def15.png" data-value="def15" />
+                    <img src="/Images/Profile/default/def16.png" data-value="def16" />
+                    <img src="/Images/Profile/default/def17.png" data-value="def17" />
+                    <img src="/Images/Profile/default/def18.png" data-value="def18" />
+                    <img src="/Images/Profile/default/def19.png" data-value="def19" />
+                    <img src="/Images/Profile/default/def20.png" data-value="def20" />
+                    <img src="/Images/Profile/default/def22.png" data-value="def22" />
+                    <br />
+                    <hr />
+                    <label class="control-label">Or upload an image</label>
+                    <input type="file" id="picUploaded" name="picUploaded" />
+                    <input type="hidden" id="picChosen" name="picChosen" />
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" class="btn btn-primary" id="ChangeImage">Update</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="Notification">
+    <div>
+        <p>TBT Live Messenger</p>
+        <span>x</span>
+    </div>
+    <p id="notiMessage"></p>
+    <a href="#" target="_blank"></a>
+</div>
+
+
 
 <style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    #MenuArea, #ConversationArea {
+        margin: 0;
+    }
+
+    #UserInfo{
+        border: 1px solid black;
+        width: 100%;
+        height: 70px;
+        padding-left: 10px;
+        padding-top: 5px;
+    }
+
+    #UserInfo div{
+        float: left;
+        color: white;
+    }
+
+    #UserInfo h3{
+        margin: 0;
+        margin-top: 3px;
+        margin-bottom: 7px;
+        font-size: 22px;
+        font-weight: 500;
+    }
+
+    #UserInfo small{
+        font-size: 12.5px;
+    }
+
+    #UserInfo p {
+        font-size: 12px;
+    }
+
+    #userImgTomini {
+        width: 55px;
+        float: left;
+        margin-right: 5px;
+
+        border-radius: 3px;
+        border-width: 3px;
+        border-style: solid;
+        border-color: green;
+        box-shadow: 0 0px 5px green; 	
+    }
+
+    #ConversationBoard{
+        width: 100%;
+        height: 275px;
+        padding: 5px 8px;
+        overflow-y: scroll;
+        overflow-wrap: break-word;
+    }
+
+    .userSaysName{
+        font-size: 12px;
+        font-weight: bold;
+        color: #222222;
+        margin: 0;
+    }
+
     .showImage{
-        width: 300px;
-        height: 300px;
+        width: 150px;
+        height: 150px;
         border-radius: 5px;
     }
 
-    body {
-        padding: 10px;
-        background-image: url('../../Images/Resources/windowlive_header_bkg.png');
-        background-position: left top;
-        background-size: cover;
-        background-repeat: no-repeat;
+    #Emotions, #Formatting{
+        width: 25px;
+        height: 25px;
+        margin: 0 8px;
     }
 
-    #userImgTo{
-        position:absolute;
-        top: 100px;
-        left: 50px;
-        width: 125px;
+    #ShakeAnimation{
+        width: 35px;
+        height: 25px;
     }
 
-    #userImgFrom{
-        position:absolute;
-        top: 500px;
-        left: 50px;
-        width: 125px;
-    }
-
-    #board {
-        min-width: 1000px;
-    }
-
-    #UserInfo {
-        padding-left: 17%;
-        border-style: solid;
-        border-color: gray;
-        border-top-width: 0;
-        border-left-width: 0;
-        border-right-width: 0;
-        border-bottom-width: 1px;
-        width: 100%;
-        height: 110px;
-        padding-top: 5px;
-        background-image: url('../../Images/Resources/banner-wallpaper.jpg');
-        background-repeat: no-repeat;
-        background-position-x: left top;
-        background-size: cover;
-    }
-
-
-    #ConversationBoard {
-        padding-left: 17%;
-        width: 100%;
-        height: 400px;
-        overflow-y: scroll;
+    #FormattingArea {
         background-color: white;
+        border: 1px solid gray;
+        border-radius: 3px;
+        position: absolute;
+        padding: 5px 20px;
+        top: 70px;
+        width: 92%;
+        height: 330px;
+        display: none;
     }
 
-
-    #UserFromImg, #UserToImg {
-        border: 3px solid green;
-        width: 150px;
-        height: 150px;
-        margin-left: 20px;
-        border-radius: 5%;
+    #FormattingArea label, #applyFormat {
+        margin-top: 10px;
     }
-
-
-    #UserToImg {
-        margin-top: 20px;
-    }
-
-
-    #UserFromImg {
-        margin-top: 250px;
-    }
-
-    #ConversationArea {
-        border: 1px solid black;
-        width: 100%;
-        float: left;
-    }
-
-    #UserConversationArea{
-        width: 100%;
-        height: 100px;
-        padding: 0;
-        margin-bottom: 25px;
-    }
-
-    #Message
-    {
-        margin-left: 17%;
-        width: 100%;
-        height: 65px;
-        max-width: 940px;
-    }
-
-    #ButtonSender{
+    
+    #FormatColor, #applyFormat{
         display: block;
     }
 
-   .userSaysName{
-       font-weight: bold;
-       font-size: 13px;
-       margin-bottom: 0px;
-       margin-left: 5px;
-   }
 
-   .userSaysMessage{
-       margin-top: 0px;
-       margin-left: 15px;
-       margin-bottom: 15px;
-   }
-
-    #MenuArea {
-        border: 1px solid black;
-        border-top-right-radius: 5px;
-        border-top-left-radius: 5px;
-        background-color: #02114b;
-    }
-
-    #MenuArea ul li a{
-         color: white;
-         margin-left: 20px;
-    }
-
-
-    #EmotionList{
-        background-color:white;
-        width: 80%;
+    #EmotionList {
+        background-color: white;
         border: 1px solid gray;
-        padding: 8px;
-        border-radius: 5px;
+        border-radius: 3px;
+        position: absolute;
+        padding: 5px;
+        top: 300px;
+        width: 92%;
+        height: 100px;
+        overflow-y: scroll;
         display: none;
-        position:absolute;
-        top: 508px;
-        left: 210px;
     }
 
     #EmotionList img{
+        width: 29px;
+        height: 29px;
         border: 1px solid #c7c7c7;
-        margin: 1px;
+        margin: 1px 0px;
         padding: 3px;
     }
 
@@ -343,71 +390,279 @@
         border: 2px solid #0025b6;
     }
 
-    #ConversationTools
-    {
-        display: block;
-        border: 1px solid black;
-        width: 82.5%;
-        height: 35px;
-        margin-left: 17%;
-        border-color:gray;
-        border-radius: 2px;
+
+    
+
+    @@media only screen and (min-height: 490px) {
+        #ConversationBoard {
+            height: 430px;
+        }
+
+        #FormattingArea {
+            top: 225px;
+        }
+
+        #EmotionList{
+             top: 455px;
+        }
     }
 
-    #ConversationTools #ButtonSender, #ConversationTools img
-    {
-        float: left;
+/**************************************************************************************/
+    @@media only screen and (min-width: 768px) {
+         .showImage{
+        width: 300px;
+        height: 300px;
+        border-radius: 5px;
+        margin-left: 10px; 15px;
+        }
+
+        body {
+            padding: 10px;
+            background: linear-gradient(@ViewBag.UserColorTo 24%, white 10%);
+            background-repeat : no-repeat;
+        }
+
+    #userImgFrom{
+        position:absolute;
+        top: 450px;
+        left: 50px;
+        width: 130px;
+        height: 140px;
+            
+        border-radius: 5px;
+        border: 4px solid @ViewBag.UserConnectionStateColorFrom;
+        box-shadow: 0 0px 5px @ViewBag.UserConnectionStateColorFrom; 	
     }
 
-    #ConversationTools img
-    {
-        width: 30px;
-        margin-left: 15px;
+    #userImgTo{
+        position:absolute;
+        top: 40px;
+        left: 50px;
+        width: 125px;
+        height: 140px;
+
+        border-radius: 5px;
+        border-width: 4px;
+        border-style: solid;
+        border-color: @ViewBag.UserConnectionStateColorTo;
+        box-shadow: 0 0px 5px @ViewBag.UserConnectionStateColorTo; 	
     }
 
-    #ShakeAnimation{
-        width: 40px;
-        min-width: 40px;
-        height: 30px;
+    #UserInfo h3, #UserInfo p, #UserInfo h3 small{
+        color: @ViewBag.UserTextColor;
     }
 
 
-    #FormattingArea
-    {
-        display: none;
-        border: 1px solid gray;
-        border-radius:5px;
-        background-color: white;
-        width: 80%;
-        height: 70px;
-        padding-top: 15px;
-        position: absolute;
-        top: 548px;
-        left: 210px;
+        #board {
+            min-width: 1000px;
+        }
+
+        #UserInfo {
+            padding-left: 17%;
+            border-style: solid;
+            border-color: gray;
+            border-top-width: 0;
+            border-left-width: 0;
+            border-right-width: 0;
+            border-bottom-width: 1px;
+            width: 100%;
+            height: 110px;
+            padding-top: 5px;
+            background-repeat: no-repeat;
+            background-position-x: left top;
+        background-size: cover;
+        }
+
+
+        #ConversationBoard {
+            padding-left: 17%;
+            width: 100%;
+            height: 400px;
+            overflow-y: scroll;
+            background-color: white;
+        }
+
+        #ConversationArea {
+            border: 1px solid black;
+            width: 100%;
+            float: left;
+        }
+
+        #UserConversationArea{
+            width: 100%;
+            height: 100px;
+            padding: 0;
+            margin-bottom: 25px;
+            background-color: white;
+        }
+
+        #Message
+        {
+            color: black;
+            margin-left: 17%;
+            width: 100%;
+            height: 65px;
+            max-width: 940px;
+        }
+
+        #ButtonSender{
+            display: block;
+        }
+
+        .userSaysName{
+            font-weight: bold;
+            font-size: 13px;
+            margin-bottom: 0px;
+            margin-left: 5px;
+        }
+
+        .userSaysMessage{
+            margin-top: 0px;
+            margin-left: 15px;
+            margin-bottom: 15px;
+        }
+
+        #MenuArea {
+            border: 1px solid black;
+            border-top-right-radius: 5px;
+            border-top-left-radius: 5px;
+        }
+
+        #MenuArea ul li a{
+                color: white;
+                margin-left: 20px;
+        }
+
+
+        #EmotionList{
+            background-color:white;
+            width: 80%;
+            height: 110px;
+            border: 1px solid gray;
+            padding: 8px;
+            border-radius: 5px;
+            display: none;
+            position:absolute;
+            top: 465px;
+            left: 210px;
+        }
+
+        #EmotionList img{
+            width: 29px;
+            height: 29px;
+            border: 1px solid #c7c7c7;
+            margin: 1px 0px;
+            padding: 3px;
+        }
+
+        #EmotionList img:hover{
+            border: 2px solid #0025b6;
+        }
+
+        #ConversationTools
+        {
+            display: block;
+            width: 82.5%;
+            height: 35px;
+            margin-left: 17%;
+            margin-top: 5px;
+        }
+
+        #ConversationTools #ButtonSender, #ConversationTools img
+        {
+            float: left;
+        }
+
+        #ConversationTools img
+        {
+            width: 30px;
+            margin-left: 15px;
+        }
+
+        #ShakeAnimation{
+            width: 40px;
+            min-width: 40px;
+            height: 30px;
+        }
+
+
+        #FormattingArea
+        {
+            display: none;
+            border: 1px solid gray;
+            border-radius:5px;
+            background-color: white;
+            width: 80%;
+            height: 70px;
+            padding-top: 15px;
+            position: absolute;
+            top: 505px;
+            left: 210px;
+        }
+
+        #FormattingArea label{
+            float:left;
+            margin-top: 8px;
+            margin-left: 20px;
+            margin-right: 5px;
+        }
+
+        #FormattingArea input{
+            float: left;
+            height: 33px;
+            width: 70px;
+        }
+
+        #FormattingArea select{
+            float: left;
+            width: 100px;
+        }
+
+        #applyFormat{
+            float: left;
+            margin-left: 25px;
+            margin-top: 0;
+        }
+
+        #submitImagePicker img{
+            margin: 3px 2px;
+        }
+
+        #UserInfo h3 {
+            margin: 0;
+            margin-top: 15px;
+            margin-bottom: 7px;
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        #UserInfo small {
+            font-size: 15px;
+        }
+
+        #UserInfo p {
+            font-size: 13.5px;
+        }
+
+        #userImgTomini {
+            display: none;
+        }
+
+        #Emotions, #Formatting, #ShakeAnimation {
+            margin-top: 3px;
+            width: 50px;
+            height: 30px;
+        }
+
+
     }
 
-    #FormattingArea label{
-        float:left;
-        margin-top: 8px;
-        margin-left: 20px;
-        margin-right: 5px;
-    }
 
-    #FormattingArea input{
-        float: left;
-        height: 33px;
-        width: 70px;
-    }
 
-    #FormattingArea select{
-        float: left;
-        width: 100px;
-    }
 
-    #applyFormat{
-        float: left;
-        margin-left: 25px;
-    }
+
+
+
 
 </style>
 
@@ -416,27 +671,54 @@
 
 <script>
     $(function () {
+
+        //SignalR
         var chat = $.connection.chatHub;
 
-        chat.client.Hello = function (usermessage, fontweight, fontcursive, fontcolor, fontsize) {
-            $("#ConversationBoard").append("<p class='userSaysName' data-userSaysId='@userto'>@Helper.getUser(userto)</p><p id='TempMessage' class='userSaysMessage' style='font-size:"+fontsize+";font-style:"+fontcursive+";font-weight:"+fontweight+";color:"+fontcolor+";'>" + usermessage + "</p>");
+        chat.client.NotificationGroup = function (active, groupid, groupname, who) {
+            if (active == true) {
+                if (who == "@userfrom") {
+                    $("#notiMessage").text("You have been added " + groupname + " group.");
+                    $("#Notification a").text("Go there");
+                    $("#Notification a").attr("href", "/Conversation/Group?userFrom=" + who + "&GroupId=" + groupid + "");
+                    $("#Notification").show("drop", { direction: "down" }, 500).delay(6000).fadeOut(1000);
+                    $("#Notification div span").click(function () { $("#Notification").css('display', 'none'); });
+                }
+            }
+        };
+
+        chat.client.NotificationFriend = function (active, userto, userfrom, message)
+        {
+            if (active == true) {
+                if(userto == "@userfrom"){
+                    if(userfrom != "@userto")
+                    {
+                        $("#notiMessage").text(message);
+                        $("#Notification a").attr("href", "/Conversation/Friend?userFrom="+userto+"&userTo="+userfrom+"&CV="+userto+""+userfrom+"");
+                        $("#Notification a").text("@Helper.getUser(userfrom)");
+                        $("#Notification").show("drop", { direction: "down" }, 500).delay(6000).fadeOut(1000);
+                        $("#Notification div span").click(function () { $("#Notification").css('display', 'none'); });
+                    }
+                }
+            }
+        }
+
+
+        //--------------------------------------------------------------------------------
+
+        chat.client.Hello = function(usermessage, fontweight, fontcursive, fontcolor, fontsize, who, usersender){
+            if(who == @pair1 || who == @pair2)
+            $("#ConversationBoard").append("<p class='userSaysName' data-userSaysId='"+usersender+"'>"+usersender+"</p><p id='TempMessage' class='userSaysMessage' style='font-size:" + fontsize + ";font-style:" + fontcursive + ";font-weight:" + fontweight + ";color:" + fontcolor + ";'>" + usermessage + "</p>");
             $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
         };
 
-        chat.client.Shake = function (act) {
-            if (act == true) {
-                $("#board").effect("shake", { times: 5 }, 800);
+        chat.client.Shake = function (act, who) {
+            if (act == true){
+                if(who == "@pair1" || who == "@pair2"){
+                    $(".board").effect("shake", { times: 5 }, 800);
+                };
             };
-
-        }
-
-        chat.client.ImageUploaded = function (relo) {
-            if (relo == true) {
-                window.location.reload();
-            };
-        }
-
-
+        };
 
         $.connection.hub.start().done(function () {
             $("#ButtonSender").click(function () {
@@ -444,67 +726,53 @@
                 var fontweight = $("#Message").css('font-weight');
                 var fontcursive = $("#Message").css('font-style');
                 var fontcolor = $("#Message").css('color');
-                chat.server.hello($("#Message").val(), fontweight, fontcursive, fontcolor, fontsize);
+                chat.server.hello($("#Message").val(), fontweight, fontcursive, fontcolor, fontsize, "@Request.QueryString["CV"]", "@Helper.getUser(userfrom)");
+                chat.server.notificationFriend(true,"@userto","@userfrom",$("#Message").val());
             });
 
             $("#ShakeAnimation").click(function () {
-                chat.server.shake(true);
+                chat.server.shake(true, @Request.QueryString["CV"]);
             });
-            
-
-            //$("body").ready(function () {
-            //    if ($("#LoadAfterPostImage").val() == "True")
-            //    {
-            //        chat.server.imageUploaded(true);
-            //        $("#LoadAfterPostImage").val("False")
-            //    }
-            //});
-
-            
-
-
         });
 
 
 
+        //Miscellaneous
+        $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
 
-
-
-
-
-
-        $("#Message").focus(function () {
-            var fontsize = $("#FormatSize").val();
-            var fontweight = $("#FormatWeight").val();
-            var fontcursive = $("#FormatCursive").val();
-            var fontcolor = $("#FormatColor").val();
-
-            $("#Message").css('font-size', fontsize)
-                         .css('font-weight', fontweight)
-                         .css('font-style', fontcursive)
-                         .css('color', fontcolor);
+        $("body").ready(function(){
+            $("#FormatSize").val('15px');
+            $("#FormatWeight").val('normal');
+            $("#FormatCursive").css('normal');
+            $("#FormatColor").css('black');
         });
 
-        $(".userSaysName").css('color', 'red');
-        $(".userSaysName[data-userSaysId='@userfrom']").css('color', 'blue');
+        if($("body").width() > 768)
+        {
+            $("body").addClass("container");
+        }
+        else
+        {
+            $("body").removeClass("container");
+        }
+
+
+
+        //Message Tools
+        //***** Very important render Emoji *****
+        $(".userSaysMessage").each(function () {
+            var tar = $(this).text();
+            var html = $.parseHTML(tar);
+            $(this).html(html);
+        });
 
         $("#Emotions").click(function () {
             $("#EmotionList").fadeToggle();
         });
 
-        //$("#ShakeAnimation").click(function () {
-        //    $("#board").effect("shake", {times: 5}, 800);
-        //});
-
         $(".emoicon").click(function(){
             var emotiontext = $(this).data("value");
             $("#Message").val($("#Message").val() + " " + emotiontext + " ");
-        });
-        //Very important render Emoji
-        $(".userSaysMessage").each(function () {
-            var tar = $(this).text();
-            var html = $.parseHTML(tar);
-            $(this).html(html);
         });
 
         $("#Formatting").click(function () {
@@ -526,22 +794,33 @@
 
 
 
-        //modals
+        //Modals
         $("#imageOpt").click(function () {
             $("#dialogs").modal('show');
         });
 
-        $(".modal-footer")
         $("#SendImage").click(function () {
             $("#submitUploadImage").submit();
         });
 
-        
+        $("#userImgFrom").click(function () {
+            $("#dialogsImg").modal('show');
+        });
 
-        $('#ConversationBoard').scrollTop($('#ConversationBoard')[0].scrollHeight);
+        $("#submitImagePicker img").click(function () {
+            var imgName = $(this).data('value');
+            $("#picChosen").val(imgName);
+            $("#submitImagePicker img").css('border', 'none');
+            $(this).css('border-width', '3px')
+                   .css('border-style', 'solid')
+                   .css('border-color', 'navy');
+        });
 
-
+        $("#ChangeImage").click(function () {
+            $("#submitImagePicker").submit();
+        });
 
 
     });
 </script>
+

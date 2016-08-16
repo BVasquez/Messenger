@@ -9,14 +9,14 @@
 <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
 <script src="~/signalr/hubs"></script>
 
-<div id="Container">
-    <div id="UserContainer">
-        <div id="photo">
+<div id="Container" class="container col-xs-12">
+    <div class="row">
+        <div id="UserContainer">
             <img id="UserImg" src="~/Images/Profile/@ViewBag.CurrentUserPhoto" />
-        </div>
-        <div id="UserInfo" >
-            <h3>@ViewBag.CurrentUserName</h3>
-            <small>(@ViewBag.CurrentUserConnectionState)</small>
+            <div id="UserInfo">
+                <h3>@ViewBag.CurrentUserName</h3>
+                <p id="MessageStatus">@ViewBag.CurrentUserMessageStatus</p>
+                <small>(@ViewBag.CurrentUserConnectionState)</small>
                 <div class="btn-group">
                     <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
                     <ul class="dropdown-menu">
@@ -25,12 +25,11 @@
                         <li><a href="#" class="ConnectionStatusOpt" data-opt="Busy">Busy</a></li>
                     </ul>
                 </div>
-            <br />
-            <br />
-            <br />
-            <p>@ViewBag.CurrentUserMessageStatus</p>
+            </div>
         </div>
     </div>
+
+    
     <div id="userTools">
         <input id="FindContact" type="text" class="form-control" placeholder="Find a contact or more" />
         <img id="addFriend" src="~/Images/Resources/add-user.png" />
@@ -38,12 +37,14 @@
         <img id="Personalize" src="~/Images/Resources/gear_64.png" />
         <a href="/account/login"><img src="~/Images/Resources/logout-48.png" /></a>
     </div>
+    
+
     <div id="FriendList">
         <h3>Friends <small>(@ViewBag.CurrentUserFriendsCount)</small></h3>
         <div class="list-group">
             @foreach (var friend in Model)
             {
-                <a id="lf-name" data-friendId="@friend.UserId" class="list-group-item lf-name" target = "_blank" href="/Conversation/Friend?userFrom=@ViewBag.CurrentUser&userTo=@friend.UserId&CV=@ViewBag.CurrentUser@friend.UserId">@string.Format("{0} {1} - ", friend.FirstName, friend.LastName) <small id="lf-status">@Helper.getFriendMessageStatus(friend.UserId)</small></a>
+                <a id="lf-name" data-friendId="@friend.UserId" class="list-group-item lf-name" target = "_blank" href="/Conversation/Friend?userFrom=@ViewBag.CurrentUser&userTo=@friend.UserId&CV=@ViewBag.CurrentUser@friend.UserId">@string.Format("{0} {1} ", friend.FirstName, friend.LastName) <small id="lf-status">- @Helper.getFriendMessageStatus(friend.UserId)</small></a>
             }
         </div>
         <h3>Groups <small>(@ViewBag.CurrentUserGroupCount)</small></h3>
@@ -177,143 +178,184 @@
 
 
 <style>
-   body {
-        padding-top: 10px;
-        background: linear-gradient(@ViewBag.CurrentUserColor, white);
-        background-repeat:no-repeat;
-        height: 185px;
-        width: 100%;
-    }
-
-    #UserInfo, #photo{
-        float: left;
-    }
-
-
-    #UserInfo h3, #UserInfo small, .btn-group, #UserInfo p {
-        float: left;
+    #UserInfo h3, #UserInfo small, #UserInfo p { 
         color: @ViewBag.CurrentUserTextColor;
     }
 
-
-    #UserInfo small{
-        margin-top: 25px;
-        margin-left: 10px;
-        font-size: 13px;
+    @@media only screen and (max-width: 434px) {
+        #UserImg {
+             margin-top: 18px;
+         }
     }
 
-    #UserInfo .btn-group{
-        margin-top: 22px;
-        margin-left: 5px;
+    @@media only screen and (max-width: 479px) {
+         body{
+             padding-top: 0;
+             background: linear-gradient(@ViewBag.CurrentUserColor, white);
+             background-repeat:no-repeat;
+         }
+
+        #UserImg{
+            width: 85px;
+            height: 85px;
+            margin-left: 20px;
+            border-radius: 5px;
+            border: 3px solid @ViewBag.CurrentUserConnectionStateColor;
+            box-shadow: 0 0 5px @ViewBag.CurrentUserConnectionStateColor;
+            float: left;
+        }
+
+         #MessageStatus, #FindContact, #lf-status{
+             display: none;
+         }
+
+         #userTools
+         {
+             border-style: solid;
+             border-width: 1px;
+             border-color: lightsteelblue;
+             border-left-color: transparent;
+             border-right-color: transparent;
+             margin: 10px 0;
+         }
+
+         #userTools img
+         {
+             width: 28px;
+             margin: 5px 5.5%;
+         }
+
+        #UserInfo {
+            float: left;
+            margin-left: 10px;
+            display: inline-block;
+            width: 56%;
+        }
+
+        #UserContainer{
+            margin-top: 15px;
+            margin-bottom: 5px;
+    
+        }
+
     }
 
-    #UserInfo p{
-        float: none;
-    }
+
+
+     @@media only screen and (min-width: 480px){
+        
+        body{
+            margin: 2px;
+            padding: 2px;
+            background: linear-gradient(@ViewBag.CurrentUserColor, white);
+            background-repeat:no-repeat;
+            height: 185px;
+        }    
+
+
+        #UserImg{
+            width: 85px;
+            height: 85px;
+            margin-left: 20px;
+            border-radius: 5px;
+            border: 3px solid @ViewBag.CurrentUserConnectionStateColor;
+            box-shadow: 0 0 5px @ViewBag.CurrentUserConnectionStateColor;
+            float: left;
+        }
+
+         #MessageStatus, #FindContact, #lf-status{
+             display: none;
+         }
+
+         #userTools
+         {
+             border-style: solid;
+             border-width: 1px;
+             border-color: lightsteelblue;
+             border-left-color: transparent;
+             border-right-color: transparent;
+             margin: 10px 0;
+         }
+
+         #userTools img
+         {
+             width: 28px;
+             margin: 5px 8%;
+         }
+
+        #UserInfo {
+            float: left;
+            margin-left: 10px;
+            display: inline-block;
+            width: 56%;
+        }
+
+        #UserContainer{
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+
+        @@media only screen and (min-width: 768px){
+
+            #MessageStatus {
+                color: #737373;
+                display: block;
+                font-size: 14px;
+                margin-bottom: 8px;
+            }        
+    
+            #lf-status {
+                display: inline-block;
+
+            }
+
+            #UserInfo h3{
+                margin-top: 8px;
+                margin-bottom: 3px;
+            }
+
+            #FindContact{
+                display: inline-block;
+                width: 72%;
+            }
+            
+            #userTools img
+            {
+                 width: 28px;
+                 margin: 0px 1%;
+            }
+
+            #userTools
+            {
+                 margin-top: 15px;
+                 padding: 5px 3px;
+            }  
+        }
+
 
     
-
-    #FriendList{
-        float: none;
-    }
-
-    #FindContact{
-
-        max-width: 1000px;
-        width: 82%;
-
-        border: 1px solid black;
-        float: left;
-    }
-
-    #userTools{
-        border-top-color: #dbe9ff;
-        border-top-style: solid;
-        border-top-width: 1px;
-        border-bottom-color: #dbe9ff;
-        border-bottom-style: solid;
-        border-bottom-width: 1px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        height: 55px;
-        width: 100%;
-    }
-
-    #userTools img{
-        float: left;
-        margin-top: 2px;
-        margin-left: 15px;
-        width: 30px;
+    @@media only screen and (min-width: 992px){
+        #FindContact
+        {
+            display: inline-block;
+            width: 77.5%;
+        }
     }
 
 
-    #FriendList
-    {
-       /* border: 1px solid #dbe9ff; */
-        border-top-width: 0;
-        width: 100%;
-        height: 500px;
+    @@media only screen and (min-width: 1200px){
+        #FindContact
+        {
+            display: inline-block;
+            width: 80%;
+        }
     }
 
-
-    #UserImg{
-    width: 90px;
-    height: 90px;
-    margin-left: 5px;
-
-    border-radius: 5px;
-    border: 3px solid @ViewBag.CurrentUserConnectionStateColor;
-    box-shadow: 0 0 5px @ViewBag.CurrentUserConnectionStateColor; 	
 }
-
-#photo { 
-    width: 90px;
-    height: 90px;
-    margin-top: 12px;
-    margin-right: 10px;
-}
-
-#Container{
-    display: block;
-    min-width: 1000px;
-}
-
-#UserContainer{
-    width: 100%;
-    min-height: 120px;
-    display: block;
-}
-
- #UserInfo {
-    width: 500px;
-    margin-top: 10px;
-    margin-left: 10px;
-}
-
- #lf-name{
-     color: black;
- }
-
- #lf-status{
-     color: gray;
- }
-
-
- #AvailableOptions{
-     width: 20px;
-     margin-left: 0;
-     margin-top: 5px;
- }
-
-
-
-
-
 
 
 </style>
-
-
 
 
 

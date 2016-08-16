@@ -1,113 +1,421 @@
 ﻿@model IEnumerable<Messenger.Models.UserViewModels>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Me";
+    int currUser = int.Parse(Request.QueryString["User"]);
+}
+
+<link href="~/Content/testing.css" rel="stylesheet" />
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+<script src="~/signalr/hubs"></script>
+
+<div id="Container" class="container col-xs-12">
+    <div class="row">
+        <div id="UserContainer">
+            <img id="UserImg" src="~/Images/Profile/@ViewBag.CurrentUserPhoto" />
+            <div id="UserInfo">
+                <h3>@ViewBag.CurrentUserName</h3>
+                <p id="MessageStatus">@ViewBag.CurrentUserMessageStatus</p>
+                <small>(@ViewBag.CurrentUserConnectionState)</small>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></button>
+                    <ul class="dropdown-menu">
+                        <li><a href="#" class="ConnectionStatusOpt" data-opt="Online">Online</a></li>
+                        <li><a href="#" class="ConnectionStatusOpt" data-opt="Offline">Offline</a></li>
+                        <li><a href="#" class="ConnectionStatusOpt" data-opt="Busy">Busy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="userTools">
+        <input id="FindContact" type="text" class="form-control" placeholder="Find a contact or more" />
+        <img id="addFriend" src="~/Images/Resources/add-user.png" />
+        <img id="CreateGroup" src="~/Images/Resources/UI_Blue_2_of_3_1-48.png" />
+        <img id="Personalize" src="~/Images/Resources/gear_64.png" />
+        <a href="/account/login"><img src="~/Images/Resources/logout-48.png" /></a>
+    </div>
+    
+
+    <div id="FriendList">
+        <h3>Friends <small>(@ViewBag.CurrentUserFriendsCount)</small></h3>
+        <div class="list-group">
+            @foreach (var friend in Model)
+            {
+                <a id="lf-name" data-friendId="@friend.UserId" class="list-group-item lf-name" target = "_blank" href="/Conversation/Friend?userFrom=@ViewBag.CurrentUser&userTo=@friend.UserId&CV=@ViewBag.CurrentUser@friend.UserId">@string.Format("{0} {1} ", friend.FirstName, friend.LastName) <small id="lf-status">- @Helper.getFriendMessageStatus(friend.UserId)</small></a>
+            }
+        </div>
+        <h3>Groups <small>(@ViewBag.CurrentUserGroupCount)</small></h3>
+        <div class="list-group">
+            @foreach (var group in ViewBag.UsersGroup)
+            {
+                <a id="lf-name" class="list-group-item" target="_blank" href="/Conversation/Group?userFrom=@ViewBag.CurrentUser&GroupId=@group.GroupListId">@group.Name</a>
+            }
+        </div>
+    </div>
+</div>
+
+
+
+@using (Html.BeginForm("SetConnectionStatus", "Dashboard", FormMethod.Post, new { id = "ConnectionStatusUpdater" }))
+{
+    @Html.Hidden("user", int.Parse(Request.QueryString["User"]))
+    @Html.Hidden("status")
 }
 
 
 
-<div id="UserContainer">
-    <img id="UserImg" src="~/Images/Resources/signin_avatar_default.png" />
-    <div id="UserInfo">
-        <h3>@ViewBag.CurrentUserName <small>(Available)</small></h3>
-        <p>Any Status Message here...</p>
+
+
+<div class="modal fade" id="dialogs">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Add Friend</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("AddFriend", "Dashboard", FormMethod.Post, new { id="addFriendForm"}))
+                {
+                    @Html.AntiForgeryToken();
+                    @Html.Hidden("currentUser", Convert.ToInt32(Request.QueryString["User"]))
+                    <input type="email" name="email" id="email" class="form-control" placeholder="Type Friend's email" style="width:100%;min-width:100%;" />
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" class="btn btn-primary" id="addFriendButton">Add</button>
+            </div>
+        </div>
     </div>
 </div>
-<div id="userTools">
-    <input id="FindContact" type="text" class="form-control" placeholder="Find a contact or more" />
-    <img src="~/Images/Resources/add-user.png" />
-    <img src="~/Images/Resources/UI_Blue_2_of_3_1-48.png" />
-    <img src="~/Images/Resources/interface-controls-sort-descending-48.png" />
-    <img src="~/Images/Resources/windowslivemail.png" />
-</div>
 
 
-<div id="FriendList">
-    <h3>Friends</h3>
-    <div class="list-group">
-        @foreach (var friend in Model)
-        {
-            @Html.ActionLink(string.Format("{0} {1}", friend.FirstName, friend.LastName), "Friend", "Conversation", new { userFrom = ViewBag.CurrentUser, userTo = friend.UserId },new { @class="list-group-item" })
-        }
+
+
+
+<div class="modal fade" id="dialogsPersonalization">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Personalization</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("SetPersonalization", "Dashboard", new { currentUser = currUser }, FormMethod.Post, new { id="perForm", enctype="multipart/form-data" }))
+                {
+                    <label for="PerMessageStatus" class="control-label">Message Status</label>
+                    <input type="text" name="PerMessageStatus" id="PerMessageStatus" class="form-control" value="@ViewBag.CurrentUserMessageStatus" />
+                    <br />
+                    <label for="PerProfilePhoto">Photo Profile</label>
+                    <input type="file" name="PerProfilePhoto" id="PerProfilePhoto" />
+                    <br />
+                    <label for="PerBackground">Background</label>
+                    <input type="file" name="PerBackground" id="PerBackground" />
+                    <br />
+                    <label for="PerColor">Theme color</label>
+                    <input type="color" name="PerColor" id="PerColor" class="form-control" value="@ViewBag.CurrentUserColor" />
+                    <br />
+                    <label for="PerColorText">Text color</label>
+                    <input type="color" name="PerColorText" id="PerColorText" class="form-control" value="@ViewBag.CurrentUserTextColor" />
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type="button" class="btn btn-primary" id="SetPer">Update</button>
+            </div>
+        </div>
     </div>
 </div>
 
 
+<div class="modal fade" id="dialogsGroup">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Create group</h4>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("CreateGroup", "Conversation", new { UserFrom = currUser }, FormMethod.Post, new { id="CreateGroupFrom" } ))
+                {
+                    @Html.TextBox("GroupName", "", new { placeholder = "Type Group Name Here", @class = "form-control" })
+                }
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal" aria-label="Close">Close</button>
+                <button type="button" class="btn btn-primary" id="SubmitCreateGroup">Create</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="dialogsDelete">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4>Remove Friend</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure remove this Friend?</p>
+            </div>
+            <div class="modal-footer">
+                @using (Html.BeginForm("RemoveUserFriend", "Dashboard", new { userFrom = currUser }, FormMethod.Post, new { @id = "submitDeleteUser" }))
+                {
+                    @Html.Hidden("friendToDelete", "")
+                    <button type="submit" class="btn btn-danger" id="SendImage">Yes</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">No</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
 <style>
-    body{
-        padding-top: 10px;
+    #UserInfo h3, #UserInfo small, #UserInfo p { 
+        color: @ViewBag.CurrentUserTextColor;
     }
 
-    header, body {
-        background-image: url('../../Images/Resources/windowlive_header_bkg.png');
-        background-size: cover;
-        background-position: left top;
-        background-repeat:no-repeat;
-        height: 150px;
+    @@media only screen and (max-width: 434px) {
+        #UserImg {
+             margin-top: 18px;
+         }
     }
 
-    #UserImg { 
-        width: 75px;
-        margin-top: 12px;
-        margin-right: 10px;
+    @@media only screen and (max-width: 479px) {
+         body{
+             padding-top: 0;
+             background: linear-gradient(@ViewBag.CurrentUserColor, white);
+             background-repeat:no-repeat;
+         }
+
+        #UserImg{
+            width: 85px;
+            height: 85px;
+            margin-left: 20px;
+            border-radius: 5px;
+            border: 3px solid @ViewBag.CurrentUserConnectionStateColor;
+            box-shadow: 0 0 5px @ViewBag.CurrentUserConnectionStateColor;
+            float: left;
+        }
+
+         #MessageStatus, #FindContact, #lf-status{
+             display: none;
+         }
+
+         #userTools
+         {
+             border-style: solid;
+             border-width: 1px;
+             border-color: lightsteelblue;
+             border-left-color: transparent;
+             border-right-color: transparent;
+             margin: 10px 0;
+         }
+
+         #userTools img
+         {
+             width: 28px;
+             margin: 5px 5.5%;
+         }
+
+        #UserInfo {
+            float: left;
+            margin-left: 10px;
+            display: inline-block;
+            width: 56%;
+        }
+
+        #UserContainer{
+            margin-top: 15px;
+            margin-bottom: 5px;
+    
+        }
+
     }
 
-    #UserContainer {
-        width: 100%;
-        height: 100px;
+
+
+     @@media only screen and (min-width: 480px){
+        
+        body{
+            margin: 2px;
+            padding: 2px;
+            background: linear-gradient(@ViewBag.CurrentUserColor, white);
+            background-repeat:no-repeat;
+            height: 185px;
+        }    
+
+
+        #UserImg{
+            width: 85px;
+            height: 85px;
+            margin-left: 20px;
+            border-radius: 5px;
+            border: 3px solid @ViewBag.CurrentUserConnectionStateColor;
+            box-shadow: 0 0 5px @ViewBag.CurrentUserConnectionStateColor;
+            float: left;
+        }
+
+         #MessageStatus, #FindContact, #lf-status{
+             display: none;
+         }
+
+         #userTools
+         {
+             border-style: solid;
+             border-width: 1px;
+             border-color: lightsteelblue;
+             border-left-color: transparent;
+             border-right-color: transparent;
+             margin: 10px 0;
+         }
+
+         #userTools img
+         {
+             width: 28px;
+             margin: 5px 8%;
+         }
+
+        #UserInfo {
+            float: left;
+            margin-left: 10px;
+            display: inline-block;
+            width: 56%;
+        }
+
+        #UserContainer{
+            margin-top: 15px;
+            margin-bottom: 5px;
+        }
+
+
+        @@media only screen and (min-width: 768px){
+
+            #MessageStatus {
+                color: #737373;
+                display: block;
+                font-size: 14px;
+                margin-bottom: 8px;
+            }        
+    
+            #lf-status {
+                display: inline-block;
+
+            }
+
+            #UserInfo h3{
+                margin-top: 8px;
+                margin-bottom: 3px;
+            }
+
+            #FindContact{
+                display: inline-block;
+                width: 72%;
+            }
+            
+            #userTools img
+            {
+                 width: 28px;
+                 margin: 0px 1%;
+            }
+
+            #userTools
+            {
+                 margin-top: 15px;
+                 padding: 5px 3px;
+            }  
+        }
+
+
+    
+    @@media only screen and (min-width: 992px){
+        #FindContact
+        {
+            display: inline-block;
+            width: 77.5%;
+        }
     }
 
-    #UserInfo, #UserImg{
-        float: left;
+
+    @@media only screen and (min-width: 1200px){
+        #FindContact
+        {
+            display: inline-block;
+            width: 80%;
+        }
     }
 
-    #UserInfo{
-        width: 500px;
-    }
-
-    #FriendList{
-        float: none;
-    }
-
-    #FindContact{
-
-        max-width: 1000px;
-        width: 82%;
-
-        border: 1px solid black;
-        float: left;
-    }
-
-    #userTools{
-        border-top-color: #dbe9ff;
-        border-top-style: solid;
-        border-top-width: 1px;
-        border-bottom-color: #dbe9ff;
-        border-bottom-style: solid;
-        border-bottom-width: 1px;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        height: 55px;
-        width: 100%;
-    }
-
-    #userTools img{
-        float: left;
-        margin-top: 2px;
-        margin-left: 15px;
-        width: 30px;
-    }
-
-
-    #FriendList
-    {
-        border: 1px solid #dbe9ff;
-        border-top-width: 0;
-        width: 100%;
-        height: 500px;
-    }
+}
 
 
 </style>
+
+
+
+<script>
+    $(function () {
+
+        $("#Personalize").click(function () {
+            $("#dialogsPersonalization").modal('show');
+        });
+
+        $("#SetPer").click(function () {
+            $("#perForm").submit();
+        });
+
+
+
+        $("#CreateGroup").click(function () {
+            $("#dialogsGroup").modal('show');
+        });
+        $("#SubmitCreateGroup").click(function () {
+            $("#CreateGroupFrom").submit();
+        });
+
+
+
+
+
+        $("#addFriend").click(function () {
+            $("#dialogs").modal('show');
+        });
+
+        $("#addFriendButton").click(function () {
+            $("#addFriendForm").submit();
+        });
+
+
+
+
+        $(".ConnectionStatusOpt").click(function () {
+            var optChoosen = $(this).data('opt');
+            $("#status").val(optChoosen);
+            $("#ConnectionStatusUpdater").submit();
+        });
+
+        window.oncontextmenu = function () {
+            return false;
+        }
+
+        $(".lf-name").mousedown(function (e) {  
+            if (e.which == 3) {
+                var userchosen = $(this).data('friendid');
+                $("#friendToDelete").val(userchosen);
+                $("#dialogsDelete").modal('show');
+            }
+        });
+
+
+
+        
+
+
+    });
+</script>

@@ -84,3 +84,12 @@ C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Rel
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.pdb
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.ColumntypeandFormattingColumnsadded.resources
 C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.SettingRequiredfieldsatConversation.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.SettingrequiredtoUser.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.Statusfieldisdeleted.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.PersonalizationModeladded.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.TextColorandStatusConnectionaddedtoPersonalizationViewModels.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.GroupListandGroupMemberadded.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.SomethingChanged.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.PersonalizationFieldaddedtoGroupList.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.ConversationGroupsadded.resources
+C:\Users\Bryan\documents\visual studio 2015\Projects\Messenger\Messenger\obj\Release\Messenger.Migrations.profilePhototoGroupListadded.resources
